@@ -7,27 +7,29 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-# An introduction to using Git to change-control projects with R
+## An introduction to using Git to change-control projects with R
 
 Git is ideal for tracking changes between text-like files, such as code or
 anything which can be opened in Notepad! Other 'binary' files (like .docx
 or .jpeg) will be included too but a hidden copy will be saved every time it
-is change (in .git/)
+is change (in `.git/`) which can get very bloated.
 In this demo, we will create a temporary folder of 'code' and see how we can
-use git to keep parallel versions, view, and restore history
+use git to keep parallel versions, view, and restore history.
 
 ```
-library(git4r)
+> library(git4r)
+Using global (system default) config: johnhobbs <johnxhobbs@gmail.com>
+```
+```
+> myproject = tempfile(pattern = 'test-git-project-')
+> dir.create(myproject)
+> setwd(myproject)
 
-myproject = tempfile(pattern = 'test-git-project-')
-dir.create(myproject)
-setwd(myproject)
-
-Make some 
-for(my_code_files in LETTERS[1:10]) write(runif(10), file=my_code_files)
+> # Make some arbitary files for our repository
+> for(my_code_files in LETTERS[1:5]) write(sample(letters,10), file=my_code_files)
 ```
 
-We can create a checkpoint (a 'commit') whenever we want which will save the
+We can create a checkpoint (a *commit*) whenever we want which will save the
 contents of any files we choose to add. We can then bring back this version of
 the file any time in the future. Normally we would want to add all files to
 our commit at once, but you might want to split the changes in two, for example
@@ -42,11 +44,48 @@ After you have added a couple of files, we will re-run git_add() and see that
 we are given the option to remove any we regret. This time add ALL of them by
 hitting enter. We will then commit all of these changes -- our first checkpoint
 ```
-git_add('','')
-git_add('','')
-git_commit('My first commit', 'Y')
-```
+> git_add()
+test-git-project-6aee992cf2 directory is not inside a git repository - check this is the top level else ESCAPE and setwd()
+Should this directory be turned into a git repo? (Y/N) Y
 
+Copying default .gitignore to working directory
+test-git-project-6aee992cf2 is now a git repo 
+
+Modified files to be added (+ created, - deleted, * changed since added, ? conflict) 
+1    +  .gitignore
+2    +  A
+3    +  B
+4    +  C
+5    +  D
+6    +  E
+Which file numbers to add? (Hit ENTER to add all non-conflicting, else ESCAPE) 1 2 3 4
+
+Adding 4 file(s)
+```
+```
+> git_add()
+Changes staged already 
+1    +  .gitignore
+2    +  A
+3    +  B
+4    +  C
+Any file numbers to un-add? (Hit ENTER to keep all) 
+
+Modified files to be added (+ created, - deleted, * changed since added, ? conflict) 
+1    +  D
+2    +  E
+Which file numbers to add? (Hit ENTER to add all non-conflicting, else ESCAPE) 
+
+Adding 2 file(s)
+```
+```
+> git_commit()
+Commit message: My first commit
+
+Commit to master? (hit ESCAPE to cancel) 
+
+Done
+```
 
 
 If we now make a whole bunch of changes, we will be able to see the new and
@@ -54,13 +93,26 @@ old version of each file, and our helpful commit message which should briefly
 describe with one sentence what was changed and why. The 'who' and 'when' are
 recorded automatically.
 ```
-for(more_files in LETTERS[7:14]) write(sample(1:100,5), file=more_files)
-git_add('','')
-git_commit('Added yet more files, with some changes', 'Y')
-for(even_more_files in LETTERS[8:12]) write(sample(1:10,5), file=even_more_files, append=TRUE)
-git_add('','')
-git_commit('Appended more random numbers', 'Y')
-git_history()
+> for(even_more_files in LETTERS[4:7]) write(sample(1:10,5), file=even_more_files, append=TRUE)
+```
+```
+> git_add()
+Modified files to be added (+ created, - deleted, * changed since added, ? conflict) 
+1       D
+2       E
+3    +  F
+4    +  G
+Which file numbers to add? (Hit ENTER to add all non-conflicting, else ESCAPE) 
+
+Adding 4 file(s)
+```
+```
+> git_commit()
+Commit message: Add some more files and made some changes
+
+Commit to master? (hit ESCAPE to cancel) 
+
+Done
 ```
 
 
@@ -72,14 +124,21 @@ on either a folder or a specific file. We can specify which commit we want to
 compare using filters like 'before' or 'message', or use NULL to get the
 the version right now.
 ```
-git_history(path='.')
-git_history(path='K', before=Sys.Date() )
-write('uncommitted change', 'H', append=TRUE)
-git_diff()
-git_diff(path='.', n=1, NULL) This is long-hand for the default git_diff()
-git_diff('H')
-git_diff(path='J', message='first', message='more')
+> git_history()
+  1 [facbb79] 2022-01-20: Add some more files and made some changes
+  2 [d8759cf] 2022-01-20: My first commit
 ```
+```
+> git_diff(path='.', n=2, n=1)
+```
+<img style="max-width: 100%" src="git_diff_1.png" alt="git_diff(path='.', n=2, n=1)" title="image Title" />
+```
+> write('uncommitted change', 'F', append=TRUE)
+```
+```
+> git_diff(path='F')
+```
+<img style="max-width: 100%" src="git_diff_2.png" alt="git_diff(path='F')" title="image Title" />
 
 
 An important feature of git is keeping parallel versions of the same working
@@ -90,14 +149,41 @@ and see that it disappears when we swap back to our master branch. We can
 find out which branch we are currently on with git_branch() and seeing where
 our current version 'HEAD' is.
 ```
-git_branch('test-branch')
-for(change_files in LETTERS[2:9]) write('TEST', file=change_files, append=TRUE)
-git_add('','')
-git_commit('Experimental changes on test-branch','Y')
-git_branch('')
-readLines('B')
-git_branch('master')
-readLines('B')
+> git_branch()
+Current active branch:  master
+
+New or existing branch name to move to (or hit ENTER to list branches) test-branch
+
+```
+```
+> for(change_files in LETTERS[2:6]) write('TEST', file=change_files, append=TRUE)
+```
+```
+> git_add()
+Modified files to be added (+ created, - deleted, * changed since added, ? conflict) 
+1       B
+2       C
+3       D
+4       E
+5       F
+Which file numbers to add? (Hit ENTER to add all non-conflicting, else ESCAPE) 
+```
+```
+> git_commit()
+Commit message: Experimental changes on test-branch
+
+Commit to test-branch? (hit ESCAPE to cancel) 
+
+Done
+```
+```
+> git_branch()
+Current active branch:  test-branch
+
+New or existing branch name to move to (or hit ENTER to list branches) 
+
+[facbb7] (Local) master
+[0f39df] (Local) (HEAD) test-branch
 ```
 
 
@@ -111,17 +197,85 @@ confirmed that you have fixed the conflicts and added the files by number.
 When a merge is complete, all of the commits from both branches will make up
 the history.
 ```
-write('This change will conflict with our test-branch', file='C')
-write('This change does not conflict with test-branch', file='A')
-git_add('','')
-git_commit('Added a change to A and C which are not in test-branch','Y')
+> git_branch()
+Current active branch:  test-branch
+
+New or existing branch name to move to (or hit ENTER to list branches) master
+```
+```
+> write('This change will conflict with our test-branch', file='E')
+```
+```
+> write('This change does not conflict with test-branch', file='H')
+```
+```
+> git_add()
+Modified files to be added (+ created, - deleted, * changed since added, ? conflict) 
+1       E
+2    +  H
+Which file numbers to add? (Hit ENTER to add all non-conflicting, else ESCAPE) 
+
+Adding 2 file(s)
+```
+```
+> git_commit()
+Commit message: Added a change to E and H which are not in test-branch
+
+Commit to master? (hit ESCAPE to cancel) 
+
+Done
+```
+```
 git_diff('',branch='test-branch', branch='master')
-git_merge('test-branch', 'Y', 'Y')
-git_add('','')
-file.edit('C')  Manually delete the tags and old code and save
-git_add('','1') And add the conflicted file by number
-git_commit('Completed the merge of our test code', 'Y')
-git_history()
+```
+<img style="max-width: 100%" src="git_diff_3.png" alt="git_diff('',branch='test-branch', branch='master')" title="image Title" />
+```
+> git_merge()
+Branch to merge into master: test-branch
+
+Merge test-branch into master 
+Proceed? (Y/N) Y
+
+Delete this branch after successful merge? (Y/N) Y
+
+Merging test-branch into master
+This merge will result with conflicts to resolve manually. Continue anyway? (Y/N) TRUE
+The following files have conflicts:
+	E
+Deleting branch test-branch
+Open the conflicting files and resolve <<<???>>> now? (Y/N) Y
+
+```
+```
+> git_add()
+Changes staged already 
+1       B
+2       C
+3       D
+4       F
+Any file numbers to un-add? (Hit ENTER to keep all) 
+
+Modified files to be added (+ created, - deleted, * changed since added, ? conflict) 
+1    ?  E
+Which file numbers to add? (Hit ENTER to add all non-conflicting, else ESCAPE) 1
+
+Adding 1 file(s)
+```
+```
+> git_commit()
+Commit message: Completed the merge of our test code
+
+Commit to master? (hit ESCAPE to cancel) 
+
+Done
+```
+```
+> git_history()
+  1 [a92c7d2] 2022-01-20: Completed the merge of our test code
+  2 [b9ea6f1] 2022-01-20: Added a change to E and H which are not in test-branch
+  3 [0f39df6] 2022-01-20: Experimental changes on test-branch
+  4 [facbb79] 2022-01-20: Add some more files and made some changes
+  5 [d8759cf] 2022-01-20: My first commit
 ```
 
 
@@ -133,12 +287,35 @@ and allow you to restore the files to a previous commit checkpoint. It does
 not remember what branch you were on, so you must git_branch() back to the
 appropriate - or new - branch if you had moved.
 ```
-git_undo()    Go back to before the merge (index '1')
-git_history() Commit history changes and forgets the merge
-git_undo()    Undo will continue to show you the merge and previous undo 'reset'
+> file.remove('B', 'D', 'G')
+[1] TRUE TRUE TRUE
+```
+```
+> git_undo()
+
+Not all changes have been committed! Run git_diff() to see what.
+
+>>>>> Continuing will result in IRREVERSIBLE LOSS <<<<<
+
+0  [a92c7d2] HEAD@{0}: commit (merge): Completed the merge of our test code
+1  [b9ea6f1] HEAD@{1}: commit: Added a change to E and H which are not in test-branch
+2  [facbb79] HEAD@{2}: checkout: moving from test-branch to master
+3  [0f39df6] HEAD@{3}: commit: Experimental changes on test-branch
+4  [facbb79] HEAD@{4}: checkout: moving from master to test-branch
+5  [facbb79] HEAD@{5}: commit: Add some more files and made some changes
+6  [d8759cf] HEAD@{6}: commit (initial): My first commit
+Which commit to reset to? (Hit ESCAPE to cancel) 0
+
+Selected: [a92c7d2] HEAD@{0}: commit (merge): Completed the merge of our test code
+Confirm that you really want to change the working directory to historic state? (Y/N) Y
+
+```
+```
+> list.files()
+[1] "A" "B" "C" "D" "E" "F" "G" "H"
 ```
 
-# Using Remote Git Repositories for Collaboration Across Local Drives
+## Using Remote Git Repositories for Collaboration Across Local Drives
 
 
 Git repositories can be synchronised with a shared location to allow multiple
@@ -150,19 +327,9 @@ make a directory. Use this as the GIT_DEFAULT_REMOTE by adding this to your
 
 Set up a pretend default_remote folder
 ```
-default_remote = tempfile(pattern = 'test-default-remote-')
-dir.create(default_remote)
-Sys.setenv(GIT_DEFAULT_REMOTE = default_remote)
-```
-
-Make some pretend project repo
-```
-myproject = tempfile(pattern = 'test-git-project-')
-dir.create(myproject)
-setwd(myproject)
-for(my_code_files in LETTERS[1:10]) write(sample(LETTERS,10), file=my_code_files)
-git_add('','')
-git_commit('My first commit', 'Y')
+> demo_default_remote = tempfile(pattern = 'test-default-remote-')
+> dir.create(demo_default_remote)
+> Sys.setenv(GIT_DEFAULT_REMOTE = demo_default_remote)
 ```
 
 
@@ -175,10 +342,33 @@ team's code which then can be shared and kept in sync.
 A repository should always have a remote path called 'origin' which it will
 look at for changes every time git_pull() is called.
 ```
-git_remote('.','','')
-git_push('','','1')
-git_branch('')
-git_pull()
+> git_remote()
+Path to repo to modify remotes? (Hit ENTER for current repo) 
+
+Listing remotes for the remote / repo "."
+No remote yet!
+Add remote? Specify with name='/path/or/url' or hit ENTER to add default origin or ESCAPE 
+
+Now run git_push() to complete setup of remote branches
+Creating bare repo at /tmp/test-default-remote-6ae5bde9f0/test-git-project-6aee992cf2
+Adding origin at /tmp/test-default-remote-6ae5bde9f0/test-git-project-6aee992cf2
+```
+```
+> git_push()
+Current branch is not yet pushed to origin -- do this manually
+Available remotes
+1    origin  /tmp/test-default-remote-6ae5bde9f0/test-git-project-6aee992cf2
+Index number of remote to push to: 1
+
+Local branches to push (+ if not in remote, > current branch) 
+1    +  >  master
+Which branch numbers to push? (Hit ENTER to add all except + else ESCAPE) 1
+
+Done
+```
+```
+> git_pull()
+Pull result: Already up-to-date
 ```
 
 
@@ -192,12 +382,38 @@ master branch for everyone once it is approved. (This is often called a merge
 request or pull-request and can be strictly enforced on http remotes).
 The cycle of pull-add-commit-push has been wrapped up in a simple git() call.
 ```
-git_branch('shuffle-letters')
-for(my_code_files in LETTERS[1:10]) write(sample(LETTERS,10), file=my_code_files)
-git_add('','')
-git_commit('Mixing up all the files, not on master','Y')
-git_push('','','2')
-git_branch('')
+> git_branch()
+Current active branch:  master
+
+New or existing branch name to move to (or hit ENTER to list branches) private-branch
+```
+```
+write('Change by person A', file='F', append=TRUE)
+```
+```
+> git()
+Skipping pull: active branch has not been pushed to origin remote
+Modified files to be added (+ created, - deleted, * changed since added, ? conflict) 
+1       F
+Which file numbers to add? (Hit ENTER to add all non-conflicting, else ESCAPE) 
+
+Adding 1 file(s)
+Commit message: Made a change on the dev-branch, waiting approval
+
+Commit to dev-branch? (hit ESCAPE to cancel) 
+
+Done
+Current branch is not yet pushed to origin -- do this manually
+Available remotes
+1    origin  /tmp/test-default-remote-6ae5bde9f0/test-git-project-6aee992cf2
+Index number of remote to push to: 1
+
+Local branches to push (+ if not in remote, > current branch) 
+1    +  >  dev-branch
+2          master
+Which branch numbers to push? (Hit ENTER to add all except + else ESCAPE) 1 2
+
+Done
 ```
 
 
@@ -213,11 +429,44 @@ If two people do push different commits onto the same branch, when you next
 pull (download changes) it will give conflicts like a merge and git_add()
 should be used to find and fix the conflicting files.
 ```
-git_clone()
-anotheruser = tempfile(pattern = 'another-user-folder-')
-dir.create(anotheruser)
-git_clone(repo_name=basename(myproject), to=anotheruser) Say YES & YES
-git_branch('')   See that all the branches in the origin remote are there
-git_diff('A', branch='master', branch='origin/shuffle-letters')
+> git_clone()
+Available repo names: 
+test-git-project-6aee992cf2
+```
+```
+> another_tempdir = tempfile()
+> dir.create(another_tempdir)
+> git_clone('test-git-project-6aee992cf2', to=another_tempdir)
+Cloning  test-git-project-6aee992cf2  into " /tmp/file6ae387d1d8a/test-git-project-6aee992cf2 "
+ -- proceed? (Y/N) Y
+
+Cloning to /tmp/file6ae387d1d8a/test-git-project-6aee992cf2
+Set working directory to here? (Y/N) Y
+
+> git_branch()
+Current active branch:  master
+
+New or existing branch name to move to (or hit ENTER to list branches) 
+
+[a92c7d] (Local) (HEAD) master
+[66d1db] (origin @ /tmp/test-default-remote-6ae5bde9f0/test-git-project-6aee992cf2) dev-branch
+(origin @ /tmp/test-default-remote-6ae5bde9f0/test-git-project-6aee992cf2) HEAD
+[a92c7d] (origin @ /tmp/test-default-remote-6ae5bde9f0/test-git-project-6aee992cf2) master
+New or existing branch name to move to (or hit ENTER to cancel) 
+```
+```
+git_diff('F', branch='master', branch='origin/dev-branch')
+```
+<img style="max-width: 100%" src="git_diff_4.png" alt="git_diff('F', branch='master', branch='origin/dev-branch')" title="image Title" />
+```
+> git_merge()
+Branch to merge into master: origin/dev-branch
+
+Merge origin/dev-branch into master 
+Proceed? (Y/N) Y
+
+Delete this branch after successful merge? (Y/N) N
+
+Merging origin/dev-branch into master
 ```
 
