@@ -18,7 +18,7 @@ use git to keep parallel versions, view, and restore history.
 
 ```
 > library(git4r)
-Using global (system default) config: johnhobbs <johnxhobbs@gmail.com>
+Using global (system default) config: johnhobbs <johnhobbs@myemail>
 ```
 ```
 > myproject = tempfile(pattern = 'test-git-project-')
@@ -47,11 +47,11 @@ we are given the option to remove any we regret. This time add ALL of them by
 hitting enter. We will then commit all of these changes -- our first checkpoint
 ```
 > git_add()
-test-git-project-6aee992cf2 directory is not inside a git repository - check this is the top level else ESCAPE and setwd()
+test-git-project directory is not inside a git repository - check this is the top level else ESCAPE and setwd()
 Should this directory be turned into a git repo? (Y/N) Y
 
 Copying default .gitignore to working directory
-test-git-project-6aee992cf2 is now a git repo 
+test-git-project is now a git repo 
 
 Modified files to be added (+ created, - deleted, * changed since added, ? conflict) 
 1    +  .gitignore
@@ -325,7 +325,7 @@ Confirm that you really want to change the working directory to historic state? 
 ```
 
 
-### Setting up a remote copy on a shared drive
+## Setting up a remote copy on a shared drive
 
 Git repositories can be synchronised with a shared location to allow multiple
 people to make versions (branches) and commit changes.
@@ -360,14 +360,14 @@ No remote yet!
 Add remote? Specify with name='/path/or/url' or hit ENTER to add default origin or ESCAPE 
 
 Now run git_push() to complete setup of remote branches
-Creating bare repo at /tmp/test-default-remote-6ae5bde9f0/test-git-project-6aee992cf2
-Adding origin at /tmp/test-default-remote-6ae5bde9f0/test-git-project-6aee992cf2
+Creating bare repo at /tmp/test-default-remote/test-git-project
+Adding origin at /tmp/test-default-remote/test-git-project
 ```
 ```
 > git_push()
 Current branch is not yet pushed to origin -- do this manually
 Available remotes
-1    origin  /tmp/test-default-remote-6ae5bde9f0/test-git-project-6aee992cf2
+1    origin  /tmp/test-default-remote/test-git-project
 Index number of remote to push to: 1
 
 Local branches to push (+ if not in remote, > current branch) 
@@ -395,7 +395,7 @@ The cycle of pull-add-commit-push has been wrapped up in a simple git() call.
 > git_branch()
 Current active branch:  master
 
-New or existing branch name to move to (or hit ENTER to list branches) private-branch
+New or existing branch name to move to (or hit ENTER to list branches) dev-branch
 ```
 ```
 write('Change by person A', file='F', append=TRUE)
@@ -415,7 +415,7 @@ Commit to dev-branch? (hit ESCAPE to cancel)
 Done
 Current branch is not yet pushed to origin -- do this manually
 Available remotes
-1    origin  /tmp/test-default-remote-6ae5bde9f0/test-git-project-6aee992cf2
+1    origin  /tmp/test-default-remote/test-git-project
 Index number of remote to push to: 1
 
 Local branches to push (+ if not in remote, > current branch) 
@@ -442,16 +442,16 @@ should be used to find and fix the conflicting files.
 ```
 > git_clone()
 Available repo names: 
-test-git-project-6aee992cf2
+test-git-project
 ```
 ```
 > another_tempdir = tempfile()
 > dir.create(another_tempdir)
-> git_clone('test-git-project-6aee992cf2', to=another_tempdir)
-Cloning  test-git-project-6aee992cf2  into " /tmp/file6ae387d1d8a/test-git-project-6aee992cf2 "
+> git_clone('test-git-project', to=another_tempdir)
+Cloning  test-git-project  into " /tmp/another_tempdir/test-git-project "
  -- proceed? (Y/N) Y
 
-Cloning to /tmp/file6ae387d1d8a/test-git-project-6aee992cf2
+Cloning to /tmp/another_tempdir/test-git-project
 Set working directory to here? (Y/N) Y
 
 > git_branch()
@@ -460,9 +460,9 @@ Current active branch:  master
 New or existing branch name to move to (or hit ENTER to list branches) 
 
 [a92c7d] (Local) (HEAD) master
-[66d1db] (origin @ /tmp/test-default-remote-6ae5bde9f0/test-git-project-6aee992cf2) dev-branch
-(origin @ /tmp/test-default-remote-6ae5bde9f0/test-git-project-6aee992cf2) HEAD
-[a92c7d] (origin @ /tmp/test-default-remote-6ae5bde9f0/test-git-project-6aee992cf2) master
+[66d1db] (origin @ /tmp/test-default-remote/test-git-project) dev-branch
+(origin @ /tmp/test-default-remote/test-git-project) HEAD
+[a92c7d] (origin @ /tmp/test-default-remote/test-git-project) master
 New or existing branch name to move to (or hit ENTER to cancel) 
 ```
 ```
