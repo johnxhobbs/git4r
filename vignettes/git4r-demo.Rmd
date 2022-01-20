@@ -29,6 +29,8 @@ Using global (system default) config: johnhobbs <johnxhobbs@gmail.com>
 > for(my_code_files in LETTERS[1:5]) write(sample(letters,10), file=my_code_files)
 ```
 
+### Selecting files and adding them to a commit
+
 We can create a checkpoint (a *commit*) whenever we want which will save the
 contents of any files we choose to add. We can then bring back this version of
 the file any time in the future. Normally we would want to add all files to
@@ -115,6 +117,7 @@ Commit to master? (hit ESCAPE to cancel)
 Done
 ```
 
+### Viewing historic commits
 
 We can view the change history of a folder (such as '.' means everything) or
 only changes which change a particular file. This gives us a an ID for this
@@ -131,15 +134,17 @@ the version right now.
 ```
 > git_diff(path='.', n=2, n=1)
 ```
-<img style="max-width: 100%" src="git_diff_1.png" alt="git_diff(path='.', n=2, n=1)" title="image Title" />
+<img style="max-width: 100%" src="git_diff_1.png" alt="git_diff(path='.', n=2, n=1)" />
 ```
 > write('uncommitted change', 'F', append=TRUE)
 ```
 ```
 > git_diff(path='F')
 ```
-<img style="max-width: 100%" src="git_diff_2.png" alt="git_diff(path='F')" title="image Title" />
+<img style="max-width: 100%" src="git_diff_2.png" alt="git_diff(path='F')" />
 
+
+### Creating and changing branches
 
 An important feature of git is keeping parallel versions of the same working
 directory, for example if you want to test something out with the option of
@@ -187,6 +192,8 @@ New or existing branch name to move to (or hit ENTER to list branches)
 ```
 
 
+### Merging branches
+
 We can merge these changes back into our master branch, or make another sub-
 branch off this one. A common problem that comes up is if you are making
 changes on lots of branches, you might change the same file in different ways.
@@ -228,7 +235,7 @@ Done
 ```
 git_diff('',branch='test-branch', branch='master')
 ```
-<img style="max-width: 100%" src="git_diff_3.png" alt="git_diff('',branch='test-branch', branch='master')" title="image Title" />
+<img style="max-width: 100%" src="git_diff_3.png" alt="git_diff('',branch='test-branch', branch='master')" />
 ```
 > git_merge()
 Branch to merge into master: test-branch
@@ -279,6 +286,8 @@ Done
 ```
 
 
+### Reverting back to a previous commit
+
 Occasionally things will go wrong with our code and we will want to hard reset
 or we merge / delete a branch by mistake. This is totally undo-able as long as
 it is done as soon as possible.
@@ -315,15 +324,15 @@ Confirm that you really want to change the working directory to historic state? 
 [1] "A" "B" "C" "D" "E" "F" "G" "H"
 ```
 
-## Using Remote Git Repositories for Collaboration Across Local Drives
 
+### Setting up a remote copy on a shared drive
 
 Git repositories can be synchronised with a shared location to allow multiple
 people to make versions (branches) and commit changes.
 
 In your team, choose a shared drive which has the access level you need, and
-make a directory. Use this as the GIT_DEFAULT_REMOTE by adding this to your
-.Renviron file (see ?git_remote for example).
+make a directory. Use this as the `GIT_DEFAULT_REMOTE` by adding this to your
+.Renviron file (see `?git_remote` for example).
 
 Set up a pretend default_remote folder
 ```
@@ -332,6 +341,7 @@ Set up a pretend default_remote folder
 > Sys.setenv(GIT_DEFAULT_REMOTE = demo_default_remote)
 ```
 
+### Adding a new remote
 
 Repositories can be given a 'remote' copy which allows changes to pushed to it
 and then others can then download ('pull') these changes to their own local
@@ -371,7 +381,7 @@ Done
 Pull result: Already up-to-date
 ```
 
-
+### Pushing changes to remote
 
 After making commits to a branch, this branch should be pushed to the remote.
 A branch can be kept local (private) by not pushing this branch. It is bad
@@ -417,6 +427,7 @@ Done
 ```
 
 
+### Cloning another copy from the shared remote
 
 Sharing code is made simple by cloning the remote folder to make a local copy.
 This automatically sets the same remote as 'origin' which means all changes
@@ -457,7 +468,7 @@ New or existing branch name to move to (or hit ENTER to cancel)
 ```
 git_diff('F', branch='master', branch='origin/dev-branch')
 ```
-<img style="max-width: 100%" src="git_diff_4.png" alt="git_diff('F', branch='master', branch='origin/dev-branch')" title="image Title" />
+<img style="max-width: 100%" src="git_diff_4.png" alt="git_diff('F', branch='master', branch='origin/dev-branch')" />
 ```
 > git_merge()
 Branch to merge into master: origin/dev-branch
