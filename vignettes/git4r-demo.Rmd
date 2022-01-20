@@ -1,0 +1,223 @@
+---
+title: "git4r-demo"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{git4r-demo}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# An introduction to using Git to change-control projects with R
+
+Git is ideal for tracking changes between text-like files, such as code or
+anything which can be opened in Notepad! Other 'binary' files (like .docx
+or .jpeg) will be included too but a hidden copy will be saved every time it
+is change (in .git/)
+In this demo, we will create a temporary folder of 'code' and see how we can
+use git to keep parallel versions, view, and restore history
+
+```
+library(git4r)
+
+myproject = tempfile(pattern = 'test-git-project-')
+dir.create(myproject)
+setwd(myproject)
+
+Make some 
+for(my_code_files in LETTERS[1:10]) write(runif(10), file=my_code_files)
+```
+
+We can create a checkpoint (a 'commit') whenever we want which will save the
+contents of any files we choose to add. We can then bring back this version of
+the file any time in the future. Normally we would want to add all files to
+our commit at once, but you might want to split the changes in two, for example
+if you added something in one file, and an unrelated change in another. Try
+adding only SOME of the file now with "2 4 5" or try all EXCEPT with "-1 -3"
+
+You will be asked first whether to convert the normal directory to a git
+repository -- always make sure you are in the right working directory so
+you don't start git-tracking your entire home directory!
+
+After you have added a couple of files, we will re-run git_add() and see that
+we are given the option to remove any we regret. This time add ALL of them by
+hitting enter. We will then commit all of these changes -- our first checkpoint
+```
+git_add('','')
+git_add('','')
+git_commit('My first commit', 'Y')
+```
+
+
+
+If we now make a whole bunch of changes, we will be able to see the new and
+old version of each file, and our helpful commit message which should briefly
+describe with one sentence what was changed and why. The 'who' and 'when' are
+recorded automatically.
+```
+for(more_files in LETTERS[7:14]) write(sample(1:100,5), file=more_files)
+git_add('','')
+git_commit('Added yet more files, with some changes', 'Y')
+for(even_more_files in LETTERS[8:12]) write(sample(1:10,5), file=even_more_files, append=TRUE)
+git_add('','')
+git_commit('Appended more random numbers', 'Y')
+git_history()
+```
+
+
+We can view the change history of a folder (such as '.' means everything) or
+only changes which change a particular file. This gives us a an ID for this
+commit which is a unique hash code, timestamp, and the message.
+We can look at what has changed between each of these commits using git_diff()
+on either a folder or a specific file. We can specify which commit we want to
+compare using filters like 'before' or 'message', or use NULL to get the
+the version right now.
+```
+git_history(path='.')
+git_history(path='K', before=Sys.Date() )
+write('uncommitted change', 'H', append=TRUE)
+git_diff()
+git_diff(path='.', n=1, NULL) This is long-hand for the default git_diff()
+git_diff('H')
+git_diff(path='J', message='first', message='more')
+```
+
+
+An important feature of git is keeping parallel versions of the same working
+directory, for example if you want to test something out with the option of
+changing back again. We do this by creating a 'branch' which will keep a
+version of all our changes that we can swap between. Let's make a TEST change
+and see that it disappears when we swap back to our master branch. We can
+find out which branch we are currently on with git_branch() and seeing where
+our current version 'HEAD' is.
+```
+git_branch('test-branch')
+for(change_files in LETTERS[2:9]) write('TEST', file=change_files, append=TRUE)
+git_add('','')
+git_commit('Experimental changes on test-branch','Y')
+git_branch('')
+readLines('B')
+git_branch('master')
+readLines('B')
+```
+
+
+We can merge these changes back into our master branch, or make another sub-
+branch off this one. A common problem that comes up is if you are making
+changes on lots of branches, you might change the same file in different ways.
+This causes a 'conflict' which it will try to resolve automatically, but if
+it cannot, it will highlight the code chunk with <<<<< >>>>>> and prompt you
+to fix it by hand. You will not be allowed to git_commit() before you have
+confirmed that you have fixed the conflicts and added the files by number.
+When a merge is complete, all of the commits from both branches will make up
+the history.
+```
+write('This change will conflict with our test-branch', file='C')
+write('This change does not conflict with test-branch', file='A')
+git_add('','')
+git_commit('Added a change to A and C which are not in test-branch','Y')
+git_diff('',branch='test-branch', branch='master')
+git_merge('test-branch', 'Y', 'Y')
+git_add('','')
+file.edit('C')  Manually delete the tags and old code and save
+git_add('','1') And add the conflicted file by number
+git_commit('Completed the merge of our test code', 'Y')
+git_history()
+```
+
+
+Occasionally things will go wrong with our code and we will want to hard reset
+or we merge / delete a branch by mistake. This is totally undo-able as long as
+it is done as soon as possible.
+git_undo() will show the recent history of actions that have happened locally,
+and allow you to restore the files to a previous commit checkpoint. It does
+not remember what branch you were on, so you must git_branch() back to the
+appropriate - or new - branch if you had moved.
+```
+git_undo()    Go back to before the merge (index '1')
+git_history() Commit history changes and forgets the merge
+git_undo()    Undo will continue to show you the merge and previous undo 'reset'
+```
+
+# Using Remote Git Repositories for Collaboration Across Local Drives
+
+
+Git repositories can be synchronised with a shared location to allow multiple
+people to make versions (branches) and commit changes.
+
+In your team, choose a shared drive which has the access level you need, and
+make a directory. Use this as the GIT_DEFAULT_REMOTE by adding this to your
+.Renviron file (see ?git_remote for example).
+
+Set up a pretend default_remote folder
+```
+default_remote = tempfile(pattern = 'test-default-remote-')
+dir.create(default_remote)
+Sys.setenv(GIT_DEFAULT_REMOTE = default_remote)
+```
+
+Make some pretend project repo
+```
+myproject = tempfile(pattern = 'test-git-project-')
+dir.create(myproject)
+setwd(myproject)
+for(my_code_files in LETTERS[1:10]) write(sample(LETTERS,10), file=my_code_files)
+git_add('','')
+git_commit('My first commit', 'Y')
+```
+
+
+Repositories can be given a 'remote' copy which allows changes to pushed to it
+and then others can then download ('pull') these changes to their own local
+version. This remote is often an http server such as GitHub however this may
+not be reachable using a corporate system or not wanted.
+This package encourages a simple shared drive folder to keep copies of the
+team's code which then can be shared and kept in sync.
+A repository should always have a remote path called 'origin' which it will
+look at for changes every time git_pull() is called.
+```
+git_remote('.','','')
+git_push('','','1')
+git_branch('')
+git_pull()
+```
+
+
+
+After making commits to a branch, this branch should be pushed to the remote.
+A branch can be kept local (private) by not pushing this branch. It is bad
+practice to commit to 'master' branch because this will almost certainly give
+problems where two people change the same file. Best is to create a unique
+(and helpful) named branch and a nominated 'codebase owner' does a merge into
+master branch for everyone once it is approved. (This is often called a merge
+request or pull-request and can be strictly enforced on http remotes).
+The cycle of pull-add-commit-push has been wrapped up in a simple git() call.
+```
+git_branch('shuffle-letters')
+for(my_code_files in LETTERS[1:10]) write(sample(LETTERS,10), file=my_code_files)
+git_add('','')
+git_commit('Mixing up all the files, not on master','Y')
+git_push('','','2')
+git_branch('')
+```
+
+
+
+Sharing code is made simple by cloning the remote folder to make a local copy.
+This automatically sets the same remote as 'origin' which means all changes
+other people make are pushed and pulled to the same place, keeping everyone
+in sync. Here, the GIT_DEFAULT_REMOTE folder is used to list all subfolders
+which can be cloned from, or you can give another path or http address.
+Changing to a remote branch will download a local copy.
+
+If two people do push different commits onto the same branch, when you next
+pull (download changes) it will give conflicts like a merge and git_add()
+should be used to find and fix the conflicting files.
+```
+git_clone()
+anotheruser = tempfile(pattern = 'another-user-folder-')
+dir.create(anotheruser)
+git_clone(repo_name=basename(myproject), to=anotheruser) Say YES & YES
+git_branch('')   See that all the branches in the origin remote are there
+git_diff('A', branch='master', branch='origin/shuffle-letters')
+```
+
