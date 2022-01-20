@@ -35,7 +35,7 @@ Usually the more recent commit should be second so that additions are shown
 in green.
 
 Previous versions of files can be opened for editing by finding them at the
-\code{tempdir()} path, or using the helper \code{open_tempfile('tempfile-123abc')}
+\code{tempdir()} path, or using the helper \code{edit_tempfile('git4r_123abc')}
 
 See ?git_history for the filter arguments that can be used
 }
@@ -66,5 +66,5 @@ git_diff('README.md', git_history()[[1]], n=1 )
 
 }
 \seealso{
-git_history, open_tempfile
+git_history, edit_tempfile
 }
