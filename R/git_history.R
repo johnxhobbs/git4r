@@ -11,7 +11,7 @@
 #' This is to prevent irreversible loss if you ever wanted to change back again.
 #'
 #' There is currently no option to checkout a specific file, however this can be
-#' done by calling git_diff() and finding the named 'tempfile-abc123' in
+#' done by calling git_diff() and finding the named 'git4r_abc123' in
 #' `tempdir()`
 #'
 #' @seealso git_history, git_diff, git_undo
@@ -225,12 +225,12 @@ git_filter_commits = function(list_of_commits, n=NULL, before=NULL,
 #' in green.
 #'
 #' Previous versions of files can be opened for editing by finding them at the
-#' `tempdir()` path, or using the helper `open_tempfile('tempfile-123abc')`
+#' `tempdir()` path, or using the helper `edit_tempfile('git4r_123abc')`
 #'
 #'
 #' See ?git_history for the filter arguments that can be used
 #'
-#' @seealso git_history, open_tempfile
+#' @seealso git_history, edit_tempfile
 #' @examples
 #' \dontrun{
 #' # Compare the last committed change with current working version
