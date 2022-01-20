@@ -28,6 +28,11 @@ git_push = function(do_default = NULL, remote_index = NULL, branch_index = NULL)
   available_remotes = git2r::remotes()
   available_remote_urls = git2r::remote_url()
 
+  if(length(available_remotes)==0){
+    message('No remotes configured')
+    return(invisible())
+  }
+
   current_branch = git2r::repository_head()$name
 
   # Shortcut - just push current branch to origin
