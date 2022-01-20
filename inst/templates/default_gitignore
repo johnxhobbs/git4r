@@ -1,0 +1,21 @@
+# Any RStudio user-specific files
+.Renviron
+.Rhistory
+.Rapp.history
+.RData
+.Rproj.user/
+.Ruserdata
+.httr-oauth
+
+# Output files from R CMD build / check / example code / vignettes
+/*.tar.gz
+/*.Rcheck/
+*-Ex.R
+vignettes/*.html
+vignettes/*.pdf
+
+# Any markdown temporary files
+*_cache/
+/cache/
+*.utf8.md
+*.knit.md

@@ -1,0 +1,25 @@
+Package: git4r
+Type: Package
+Title: Interactive Git For R
+Version: 0.1.0
+Authors@R: 
+  person(given = "John",
+         family = "Hobbs",
+         role = c("aut", "cre"),
+         email = "johnxhobbs@gmail.com")
+Description: An interactive git user interface from the R command line. Intuitive
+         tools to make commits, branches, remotes, and diffs an integrated part
+         of R coding. Built on git2r, a sytem installation of git is not required
+         and default on-premises-remote option avoids proxy issues.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+Imports: 
+    git2r,
+    diffr,
+    utils
+Suggests:
+    rstudioapi,
+    data.table
+RoxygenNote: 7.1.1
