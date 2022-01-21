@@ -34,7 +34,7 @@ git = function(){
 #' - `*` has been changed since git_add() was last called and should be re-added
 #' - `@` has been renamed, but this will often show as a pair of `+` and `-`
 #' - `?` contains conflict from latest merge; go in and edit by hand, searching
-#'       for "<<<<<<< HEAD" upto ">>>>>>> (some branch)"
+#'       for "<<<<<<< HEAD" up to ">>>>>>> (some branch)"
 #'
 #' Arguments can be given which are the character or integer answer to the
 #' interactive questions asked. It is highly recommended that you do not rely

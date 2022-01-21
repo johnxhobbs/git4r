@@ -25,7 +25,7 @@ happened in both branches.
 }
 \details{
 A really neat tool in RStudio is \code{Edit} -> \verb{Find in Files...} which allows
-you to serach your entire repository for where the conflicts are. These are
+you to search your entire repository for where the conflicts are. These are
 identified by searching for the chevrons <<<
 
 Conflicts are the usual format for git and may also happen after git_pull().

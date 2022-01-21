@@ -34,7 +34,7 @@ Each file or directory is given a symbol for change type:
 \item \code{*} has been changed since git_add() was last called and should be re-added
 \item \code{@} has been renamed, but this will often show as a pair of \code{+} and \code{-}
 \item \verb{?} contains conflict from latest merge; go in and edit by hand, searching
-for "<<<<<<< HEAD" upto ">>>>>>> (some branch)"
+for "<<<<<<< HEAD" up to ">>>>>>> (some branch)"
 }
 
 Arguments can be given which are the character or integer answer to the

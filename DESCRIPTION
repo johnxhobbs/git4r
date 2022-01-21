@@ -9,7 +9,7 @@ Authors@R:
          email = "johnxhobbs@gmail.com")
 Description: An interactive git user interface from the R command line. Intuitive
          tools to make commits, branches, remotes, and diffs an integrated part
-         of R coding. Built on git2r, a sytem installation of git is not required
+         of R coding. Built on git2r, a system installation of git is not required
          and default on-premises-remote option avoids proxy issues.
 License: MIT + file LICENSE
 URL: https://github.com/johnxhobbs/git4r

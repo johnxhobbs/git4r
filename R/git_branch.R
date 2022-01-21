@@ -110,7 +110,7 @@ git_branch = function(branchname = NULL, deletebranch = NULL){
 #' happened in both branches.
 #'
 #' A really neat tool in RStudio is `Edit` -> `Find in Files...` which allows
-#' you to serach your entire repository for where the conflicts are. These are
+#' you to search your entire repository for where the conflicts are. These are
 #' identified by searching for the chevrons <<<
 #'
 #' Conflicts are the usual format for git and may also happen after git_pull().
