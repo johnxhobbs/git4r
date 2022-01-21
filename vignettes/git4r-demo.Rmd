@@ -62,7 +62,7 @@ Which file numbers to add? (Hit ENTER to add all non-conflicting, else ESCAPE) 1
 Adding 4 file(s)
 ```
 
-After adding a couple of files, we will re-run git_add() and see that
+After adding a couple of files, we will re-run `git_add()` and see that
 we are given the option to remove any we regret. This time we add ALL files by
 hitting enter.
 
@@ -132,7 +132,7 @@ code for this commit which is a unique hash, as well as timestamp and the messag
   1 [facbb79] 2022-01-20: Add some more files and made some changes
   2 [d8759cf] 2022-01-20: My first commit
 ```
-We can look at what has changed between each of these commits using git_diff()
+We can look at what has changed between each of these commits using `git_diff()`
 on either a folder or within specific file. We can specify which commit we want to
 compare using filters like 'before' or 'message', or use NULL to get the
 the version right now. See `?git_history` for the full list.
