@@ -13,6 +13,9 @@ existing branches}
 \item{deletebranch}{If moving off a branch which has no commits on it, should the departed
 branch be deleted? "Y" or TRUE, else FALSE}
 }
+\value{
+Invisible NULL
+}
 \description{
 Swaps to a different branch if exists, otherwise makes one from most recent
 commit, and checks out this branch. Hit ENTER on first question to see a list

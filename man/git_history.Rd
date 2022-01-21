@@ -24,6 +24,10 @@ providing that fetch or pull has downloaded changes.}
 \value{
 Return the git_commit object which best matches a wide variety of types. This
 is used for git_diff() and git_checkout().
+
+Vector of commit objects invisibly
+
+Single commit object
 }
 \description{
 Display the history of commits in specific branch with the option to filter.

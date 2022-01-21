@@ -13,6 +13,9 @@ character atomic.}
 \item{proceed}{Confirmation before proceeding, logical atomic with option for
 any character string starting 'Y' to be interpreted as \code{TRUE}}
 }
+\value{
+Invisible NULL
+}
 \description{
 Run git_add() immediately before to see what files are being committed. It is
 highly recommended that you run in interactive mode using no arguments

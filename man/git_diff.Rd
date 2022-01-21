@@ -15,6 +15,9 @@ is a subdirectory.}
 a commit object from git_history() or get_git(), or a single filter
 argument which is passed to get_git().}
 }
+\value{
+A diffr htmlwidget object which is automatically opened in Rstudio Viewer tab
+}
 \description{
 Display the difference between two commits of a file or a directory structure.
 Paths must be relative to the top-level git directory so it is recommended that

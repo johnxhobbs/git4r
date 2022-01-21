@@ -18,7 +18,7 @@
 #' @param do_default Confirm that the default push-all-tracking-branches-to-origin ("Y" or TRUE)
 #' @param remote_index If this is not true, selection of remote to push to (integer vector)
 #' @param branch_index The selection of branches to push (integer vector)
-#'
+#' @returns Invisible NULL
 #' @export
 git_push = function(do_default = NULL, remote_index = NULL, branch_index = NULL){
 
@@ -110,7 +110,7 @@ git_push = function(do_default = NULL, remote_index = NULL, branch_index = NULL)
 #' address, for example `GIT_PAT_AZURE=` in `~/.Renviron`
 #'
 #' @seealso git_push, git_remote
-#'
+#' @returns Invisible NULL
 #' @export
 git_pull = function(){
   if(is.null(git2r::discover_repository()))
@@ -148,6 +148,7 @@ git_pull = function(){
 #'             repo names. Also accepted is the url or complete filepath to a
 #'             repo to clone (identified if containing '/').
 #' @param to Local path to create local project folder in, defaults to My Documents
+#' @returns Invisible NULL
 #' @export
 git_clone = function(repo_name='', to='~'){
 
@@ -258,6 +259,7 @@ git_display_remotes = function(url='.', prefix=''){
 #' @param repo_path Path of repo to modify parents of, "" or "." for default current repo
 #' @param remote_index Index of remote to edit / remove? (Integer vector or string)
 #' @param remote_name Name of remote to add (string of format "name='/path/or/url'", or "" for `GIT_DEFAULT_REMOTE`)
+#' @returns Invisible NULL
 #' @export
 git_remote = function(repo_path = NULL, remote_index = NULL, remote_name = NULL){
   # git_display_remotes()

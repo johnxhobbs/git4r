@@ -13,6 +13,9 @@ git_add(remove_index = NULL, add_index = NULL)
 \item{add_index}{Integer vector or character of file numbers to add?
 (Use "" to add all non-conflicting)}
 }
+\value{
+Invisible NULL
+}
 \description{
 Prints all changed files since last commit and waits for you to hit
 ENTER to add everything, or type out the space-separated numbers of

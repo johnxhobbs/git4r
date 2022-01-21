@@ -6,6 +6,9 @@
 \usage{
 git_pull()
 }
+\value{
+Invisible NULL
+}
 \description{
 This will pull any updates from the remote which each branch is tracking.
 This is set using git_remote() to be the 'origin' remote, usually at

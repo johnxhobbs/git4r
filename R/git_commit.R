@@ -5,7 +5,7 @@
 #' Call the git pull-add-commit-push cycle interactively
 #'
 #' @seealso git_remote, git_add, git_commit, git_push, git_branch, git_diff
-#'
+#' @returns Invisible NULL
 #' @export
 git = function(){
   check_is_repo() # This is otherwise called by git_add()
@@ -44,7 +44,7 @@ git = function(){
 #'              (Use "" to keep all)
 #' @param add_index Integer vector or character of file numbers to add?
 #'              (Use "" to add all non-conflicting)
-#'
+#' @returns Invisible NULL
 #' @export
 git_add = function(remove_index = NULL, add_index = NULL){
 
@@ -147,6 +147,7 @@ git_add = function(remove_index = NULL, add_index = NULL){
 #'                character atomic.
 #' @param proceed Confirmation before proceeding, logical atomic with option for
 #'                any character string starting 'Y' to be interpreted as `TRUE`
+#' @returns Invisible NULL
 #' @export
 git_commit = function(message = NULL, proceed = NULL){
 

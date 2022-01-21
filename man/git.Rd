@@ -6,6 +6,9 @@
 \usage{
 git()
 }
+\value{
+Invisible NULL
+}
 \description{
 Call the git pull-add-commit-push cycle interactively
 }

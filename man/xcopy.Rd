@@ -15,6 +15,9 @@ xpaste(header = TRUE)
 \item{header}{Data includes headers -- the only reason to omit when pasting is
 concatenating multiple chunks below each other}
 }
+\value{
+A data.frame (or data.table if package is attached) or invisible NULL for xcopy()
+}
 \description{
 This reads a table from a (enlarged) clipboard or writes as tab-separated
 which behaves nicely in Excel
@@ -23,5 +26,5 @@ which behaves nicely in Excel
 Pasting from Excel breaks if the text contains linebreaks within a cell.
 To fix this, use Find&Replace "ctrl+J" within Excel
 
-If \code{data.table} is attached, xpaste() will return a data.table
+If \code{data.table} is attached, xpaste() will return a data.table with setDT()
 }

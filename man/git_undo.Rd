@@ -9,6 +9,9 @@ git_undo(top = 10)
 \arguments{
 \item{top}{Number of undo commits to show}
 }
+\value{
+Invisible NULL
+}
 \description{
 Reset working directory to any previous commit, or action. This will not change
 the active branch so do this \emph{first} if you want to continue on a different

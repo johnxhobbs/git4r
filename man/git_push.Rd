@@ -13,6 +13,9 @@ git_push(do_default = NULL, remote_index = NULL, branch_index = NULL)
 
 \item{branch_index}{The selection of branches to push (integer vector)}
 }
+\value{
+Invisible NULL
+}
 \description{
 Pushes just current branch to 'origin' by default, but allows selective
 pushing of branches to different remotes if this is declined, for example

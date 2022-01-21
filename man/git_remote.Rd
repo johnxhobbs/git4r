@@ -13,6 +13,9 @@ git_remote(repo_path = NULL, remote_index = NULL, remote_name = NULL)
 
 \item{remote_name}{Name of remote to add (string of format "name='/path/or/url'", or "" for \code{GIT_DEFAULT_REMOTE})}
 }
+\value{
+Invisible NULL
+}
 \description{
 View and interactively add or edit remotes for this repo or another. When
 adding a local shared-drive remote, it will create a bare git repo in the

@@ -25,6 +25,7 @@
 #' @param deletebranch If moving off a branch which has no commits on it, should the departed
 #'                branch be deleted? "Y" or TRUE, else FALSE
 #'
+#' @returns Invisible NULL
 #' @export
 git_branch = function(branchname = NULL, deletebranch = NULL){
   current_head = git2r::repository_head()
@@ -125,7 +126,7 @@ git_branch = function(branchname = NULL, deletebranch = NULL){
 #' @param deletebranch Delete branch after successful merge (this will never lose data) ("Y" or TRUE)
 #' @param proceed  Confirm merge should proceed, even if conflicts arise ("Y" or TRUE).
 #'                 Recommended against using this argument which skips confirmation steps.
-#'
+#' @returns Invisible NULL
 #' @export
 git_merge = function(branchname = NULL, deletebranch = NULL, proceed = NULL){
   current_branch = git2r::repository_head()$name

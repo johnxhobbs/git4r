@@ -14,6 +14,9 @@ git_merge(branchname = NULL, deletebranch = NULL, proceed = NULL)
 \item{proceed}{Confirm merge should proceed, even if conflicts arise ("Y" or TRUE).
 Recommended against using this argument which skips confirmation steps.}
 }
+\value{
+Invisible NULL
+}
 \description{
 For good house-keeping, the merged branch is by default deleted, this can be
 recreated any time using git_branch(). Conflict resolution is yet to be

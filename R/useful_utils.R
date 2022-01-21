@@ -7,16 +7,18 @@
 #' Pasting from Excel breaks if the text contains linebreaks within a cell.
 #' To fix this, use Find&Replace "ctrl+J" within Excel
 #'
-#' If `data.table` is attached, xpaste() will return a data.table
+#' If `data.table` is attached, xpaste() will return a data.table with setDT()
 #'
+#' @returns A data.frame (or data.table if package is attached) or invisible NULL for xcopy()
 #' @param x A data.frame or any table which can be written with `write.table()`
 #' @param header Data includes headers -- the only reason to omit when pasting is
 #'            concatenating multiple chunks below each other
 #'
 #' @export
-xcopy = function(x, header=TRUE)
+xcopy = function(x, header=TRUE){
   utils::write.table(x, 'clipboard-10240', sep='\t', row.names=FALSE, col.names=header)
-
+  return(invisible())
+}
 #' @rdname xcopy
 #' @export
 xpaste = function(header=TRUE){
@@ -46,6 +48,7 @@ fix_path = function(){
 #' `git_diff()` saves copies of each file opened in `tempdir()` which can be
 #' opened for editing by this helper.
 #'
+#' @returns Invisible NULL
 #' @param filename Character vector of filenames which exist in `tempdir()` to
 #'           open for editing. Parses with `basename()` so no subdirectories allowed.
 #' @export

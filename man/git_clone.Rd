@@ -13,6 +13,9 @@ repo to clone (identified if containing '/').}
 
 \item{to}{Local path to create local project folder in, defaults to My Documents}
 }
+\value{
+Invisible NULL
+}
 \description{
 Running without any repo_name will print a list of valid repos found at the
 GIT_DEFAULT_REMOTE path, and can then be re-run with one of these names to

@@ -20,6 +20,7 @@
 #' @param onto_new_branch Call git_branch() immediately to make a new active branch
 #'               (otherwise will be left HEAD-less -- not on a branch at all!)
 #' @param force  Allow all changes since last commit to be irreversibly deleted
+#' @returns Invisible NULL
 #' @export
 git_checkout = function(commit, onto_new_branch, force = FALSE){
 
@@ -56,6 +57,7 @@ git_checkout = function(commit, onto_new_branch, force = FALSE){
 #' been deleted, and this undo 'reset' itself will appear as a 'reflog' action
 #'
 #' @param top Number of undo commits to show
+#' @returns Invisible NULL
 #' @export
 git_undo = function(top = 10){
   check_everything_committed(warn=TRUE)
@@ -111,6 +113,7 @@ git_undo = function(top = 10){
 #' @param top    Maximum number of commits to display (post-filtering)
 #' @param path   Only display / search commits which affect this path (dir or file)
 #' @param ...    Filters such as before='2021-01-01' or author='somebody'
+#' @returns Vector of commit objects invisibly
 #' @export
 git_history = function(path = '.', branch = NULL, top = 10, ...){
   if(!is.null(branch)){
@@ -134,6 +137,7 @@ git_history = function(path = '.', branch = NULL, top = 10, ...){
 
 #' Get a Git Commit from Identifier
 #' @rdname git_history
+#' @returns Single commit object
 #' @export
 git_get = function(path = '.', branch = NULL, ...){
 
@@ -262,6 +266,7 @@ git_filter_commits = function(list_of_commits, n=NULL, before=NULL,
 #' @param ...  Two arguments to be passed for which versions to select: can be
 #'             a commit object from git_history() or get_git(), or a single filter
 #'             argument which is passed to get_git().
+#' @returns A diffr htmlwidget object which is automatically opened in Rstudio Viewer tab
 #' @export
 git_diff = function(path = '.', ...){
   if(path=='') path='.'

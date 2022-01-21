@@ -10,6 +10,9 @@ edit_tempfile(filename)
 \item{filename}{Character vector of filenames which exist in \code{tempdir()} to
 open for editing. Parses with \code{basename()} so no subdirectories allowed.}
 }
+\value{
+Invisible NULL
+}
 \description{
 \code{git_diff()} saves copies of each file opened in \code{tempdir()} which can be
 opened for editing by this helper.

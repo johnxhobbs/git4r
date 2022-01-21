@@ -14,6 +14,9 @@ git_checkout(commit, onto_new_branch, force = FALSE)
 
 \item{force}{Allow all changes since last commit to be irreversibly deleted}
 }
+\value{
+Invisible NULL
+}
 \description{
 Rewind the entire working directory to a previous commit or a different branch. Use
 this if you have made changes which you want to remove and start trying something
