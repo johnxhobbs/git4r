@@ -291,7 +291,7 @@ git_remote = function(repo_path = NULL, remote_index = NULL, remote_name = NULL)
     if(repo!='.') stop('Cannot automatically add default remote within GIT_DEFAULT_REMOTE unless repo is current directory ')
 
     if(check_has_default_remote()==TRUE){
-      cat('Already has default origin=\'',Sys.getenv('GIT_DEFAULT_REMOTE'),'\'',sep='')
+      cat('Already has origin=\'',remote_urls[remote_names=='origin'],'\'',sep='')
       return(invisible())
     }
 
