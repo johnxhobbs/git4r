@@ -176,7 +176,7 @@ git_merge = function(branchname = NULL, deletebranch = NULL, proceed = NULL){
   # git_history will contain the commits of BOTH branches so can rewind still
   if(delete_after==TRUE){
     message('Deleting branch ', merge_branch)
-    git2r::branch_delete(branch=git2r::branches(flags='local')[[merge_branch]])}
+    git2r::branch_delete(branch=git2r::branches()[[merge_branch]])}
 
   if(merge_res$conflicts==TRUE){
     proceed = ask_proceed('Open the conflicting files and resolve <<<???>>> now? (Y/N) ', answer=NULL)
