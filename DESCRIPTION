@@ -1,6 +1,6 @@
 Package: git4r
 Type: Package
-Title: Interactive Git For R
+Title: Interactive Git for R
 Version: 0.1.0
 Authors@R: 
   person(given = "John",
@@ -15,7 +15,6 @@ License: MIT + file LICENSE
 URL: https://github.com/johnxhobbs/git4r
 BugReports: https://github.com/johnxhobbs/git4r/issues
 Encoding: UTF-8
-LazyData: true
 Roxygen: list(markdown = TRUE)
 Imports: 
     git2r,
