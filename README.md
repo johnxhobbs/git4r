@@ -17,13 +17,13 @@ changes are committed before changing to another branch, and only allowing
 changes to be pulled from the 'origin' remote. This is designed to reduce 
 frustrations, conflicts, and lost work. However no use of git is ever pain-free
 and it is expected that when these tools hit their limit, users may have to resort
-to full git-scm or equivalent to make drastic repairs.
+to full git-scm or equivalent to make more drastic repairs.
 
 This tool set is designed to be minimal but sufficient to get the key advantages 
 of using git:
  - tracking changes with an audit-trail of commit messages
  - undoing mistakes
- - visualising the changes made between versions of a file or file structure
+ - visualising the changes made between versions of a file or folder
  - working on many parallel version (branches) and effortlessly swapping and merging
  - synchronising with a remote version to collaborate with others and provide backup
 
@@ -34,13 +34,16 @@ You can install the latest version of git4r from its git repository. The
 package uses environmental variables for default behaviour, including personal
 access tokens (which are not required if you use a local remote directory).
 
-``` r
-remotes::install_git('path/to/git/git4r')
+Use of `GIT_DEFAULT_REMOTE` is entirely optional and is particularly for 
+organisations wishing to have an entirely on-premises git workflow. 
 
+``` r
+install.packages('git4r')
+
+# This package makes use of environmental variables to look for configuration
+# None are essential if a repositroy already has a remote and user details
+# but otherwise these values will be looked for.
 file.edit('~/.Renviron')
-# Copy these environmental variables used by the package
-# GIT_DEFAULT_REMOTE can be used where a shared-drive remote
-# is wanted, for example on a corporate network
 GIT_DEFAULT_REMOTE=L:/ocal/shared/directory
 GIT_USER=myname
 GIT_EMAIL=myemail@company.com
@@ -50,11 +53,10 @@ GIT_PAT_BITBUCKET=or-here-whichever-name-matches-the-url-best
 
 ## Example
 
-For interactive demonstration run `demo('git-intro')` and `demo('git-remote')`
-(note, this changes working directory to a temporary example folder and 
-overwrites GIT_DEFAULT_REMOTE with a test value).
-
 All functions are designed to be used interactively and, hopefully, intuitively.
+
+See the vignette for a very basic introduction to git concepts, the documentation
+for each function, or just make a temporary working directory and have a go.
 
 ``` r
 library(git4r)
