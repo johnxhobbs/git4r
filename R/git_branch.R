@@ -71,6 +71,8 @@ git_branch = function(branchname = NULL, deletebranch = NULL){
       # Remove the staged files from the branch you just left
       # This can cause some lingering behaviour when you eventually
       # go back to the first branch again
+      # OR maybe this is caused by .gitignore changing between branches
+      # possible sync check to make sure this is always the same?
       return(invisible())
     }
 
