@@ -25,7 +25,7 @@ As with changing branch, it is forbidden to change with changes yet-to-be-commit
 This is to prevent irreversible loss if you ever wanted to change back again.
 
 There is currently no option to checkout a specific file, however this can be
-done by calling git_diff() and finding the named 'tempfile-abc123' in
+done by calling git_diff() and finding the named 'git4r_abc123' in
 \code{tempdir()}
 }
 \seealso{

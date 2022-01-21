@@ -21,5 +21,8 @@ Imports:
     utils
 Suggests:
     rstudioapi,
-    data.table
+    data.table,
+    knitr,
+    rmarkdown
 RoxygenNote: 7.1.1
+VignetteBuilder: knitr
