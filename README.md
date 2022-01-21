@@ -2,6 +2,8 @@
 # git4r
 
 <!-- badges: start -->
+[![CRAN status](https://www.r-pkg.org/badges/version/git4r)](https://CRAN.R-project.org/package=git4r)
+[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 <!-- badges: end -->
 
 ## Git For R
@@ -39,6 +41,9 @@ organisations wishing to have an entirely on-premises git workflow.
 
 ``` r
 install.packages('git4r')
+# (This can be installed with dependencies=FALSE to avoid the large
+#  dependency trail of diffr, however this is only for the most
+#  extreme minimal installations, and git_diff() will not work)
 
 # This package makes use of environmental variables to look for configuration
 # None are essential if a repositroy already has a remote and user details
