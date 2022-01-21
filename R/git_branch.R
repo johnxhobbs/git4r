@@ -67,6 +67,10 @@ git_branch = function(branchname = NULL, deletebranch = NULL){
         if(ask_proceed(paste0('Delete the unused branch ',current_branch,'? (Y/N) '), answer=deletebranch))
           git2r::branch_delete(branches[[current_branch]])
       }
+      # TODO
+      # Remove the staged files from the branch you just left
+      # This can cause some lingering behaviour when you eventually
+      # go back to the first branch again
       return(invisible())
     }
 
