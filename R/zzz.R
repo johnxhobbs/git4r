@@ -1,15 +1,16 @@
 
 #' Run On Load
 #'
-#' This initialises the user environment when the package is loaded to make sure
+#' This initialises the user environment when the package is attached to make sure
 #' that required git username / password is available (and notify which is being
-#' used).
+#' used). It is highly anticipated that this will be used in interactive mode,
+#' and may be reloaded several times in one session using `library(git4r)`
 #'
 #' Some of the environmental options can be set as .Renviron variables, such
 #' as username, local remote directory, and personal access token secrets.
 #' @param libname (as required)
 #' @param pkgname (as required)
-.onLoad = function(libname, pkgname){
+.onAttach = function(libname, pkgname){
 
   # Load your user settings
   local_user = git2r::config()$local$user.name
