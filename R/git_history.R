@@ -229,12 +229,12 @@ git_filter_commits = function(list_of_commits, n=NULL, before=NULL,
 #' in green.
 #'
 #' Previous versions of files can be opened for editing by finding them at the
-#' `tempdir()` path, or using the helper `edit_tempfile('git4r_123abc')`
+#' `tempdir()` path.
 #'
 #'
 #' See ?git_history for the filter arguments that can be used
 #'
-#' @seealso git_history, edit_tempfile
+#' @seealso git_history
 #' @examples
 #' \dontrun{
 #' # Compare the last committed change with current working version
