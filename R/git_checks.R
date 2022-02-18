@@ -94,21 +94,6 @@ check_is_repo = function(){
   return(TRUE)
 }
 
-# Check Repo has Central Remote
-# Returns TRUE if correct, with warning if unusual path, or FALSE otherwise
-check_has_default_remote = function(){
-  named_remotes = git2r::remotes()
-  if('origin' %in% named_remotes){
-    check_url = git2r::remote_url()[named_remotes=='origin']
-    current_url = Sys.getenv('GIT_DEFAULT_REMOTE')
-    if(dirname(check_url)!=dirname(paste0(check_url,'/'))){
-      warning('Repository has "origin" remote, but not pointing at GIT_DEFAULT_REMOTE -- use git_remote() to fix')
-    }
-    return(TRUE)
-  }
-  else
-    return(FALSE)
-}
 
 # Checks if Usable for Remote
 #
@@ -116,19 +101,19 @@ check_has_default_remote = function(){
 # repo at target_path, else gives an error.
 # Default is to compare the request new remote to current working dir but can
 # specify using here='/another/repo/path'
-check_and_create_valid_repo = function(target_path, here='.'){
+check_and_create_valid_repo = function(target_path, here='.',bare=TRUE){
   if(dir.exists(target_path)){
     if(length(list.files(target_path,all.files=TRUE))==0){
       # Empty, existing folder
       message('Converting empty directory into git repo')
-      git2r::init(path=target_path, bare=TRUE)
+      git2r::init(path=target_path, bare=bare)
       return(TRUE)
     }
     if(!is.null(git2r::discover_repository(path=target_path))){
       # Is some kind of git repo
-      if(!git2r::is_bare(target_path)){
+      if(!git2r::is_bare(target_path) & bare==TRUE){
         # Bare repo already here!
-        stop('This is a working directory, not a bare git repo')
+        stop('This is a working directory, not a bare git repo. Call again with bare=FALSE to proceed')
       }
       else{
         tryCatch({remote_latest_commit = git2r::last_commit(target_path)$sha},
@@ -156,9 +141,9 @@ check_and_create_valid_repo = function(target_path, here='.'){
   else{
     # Directory does NOT exist yet
     #ask_proceed('Create directory as git remote repo? (Y/N) ')
-    message('Creating bare repo at ',target_path)
+    message('Creating', if(bare) ' bare' ,' repo at ',target_path)
     dir.create(target_path, recursive=TRUE)
-    git2r::init(path=target_path, bare=TRUE)
+    git2r::init(path=target_path, bare=bare)
   }
   return(TRUE)
 }

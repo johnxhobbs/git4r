@@ -16,8 +16,6 @@
 #' @seealso git_pull, git_remote
 #'
 #' @param do_default Confirm that the default push-all-tracking-branches-to-origin ("Y" or TRUE)
-#' @param remote_index If this is not true, selection of remote to push to (integer vector)
-#' @param branch_index The selection of branches to push (integer vector)
 #' @returns Invisible NULL
 #' @export
 git_push = function(do_default = NULL){
@@ -216,21 +214,29 @@ git_clone = function(repo_name='', to='~'){
 }
 
 
-#' Git Edit Remotes
+#' Git Modify Remotes
 #'
-#' View and interactively add or edit remotes for this repo or another. When
-#' adding a local shared-drive remote, it will create a bare git repo in the
-#' GIT_DEFAULT_REMOTE directory with the name of the current project.
+#' View and interactively edit remotes for this repo. The most important of these
+#' is 'origin' which will be used by `git_pull()`, however you may also want a
+#' write-only mirror, for example where you push a production-ready commit. If
+#' GIT_DEFAULT_REMOTE environmental value has been set, this will be suggested
+#' for 'origin'.
 #'
-#' Within `git4r`, branches will always track the 'origin' remote.
+#' If using a filesystem path for the remote, the option is given to create a full
+#' working tree (copy of all files) or bare repository. A bare repository is
+#' recommended for 'origin' because no one should make any changes to this directly
+#' (instead, clone their own copy). For pushing to a 'backup' or 'production' remote,
+#' you will want to push a copy of the files themselves.
 #'
-#' Across your team, create a folder that you all have read/write permissions
-#' to and nominate it as the location for all remotes using:
-#' `Sys.setenv(GIT_DEFAULT_REMOTE='P:/ath/to/teams/remote_repo/folder')`
+#' If you have set `GIT_DEFAULT_REMOTE` environmental value this will be suggested
+#' as the path for creating an 'origin' remote. This will make life easier because
+#' it will be the same as the rest of your projects / team and will be searched
+#' by `git_clone()`.
+#' Use `Sys.setenv(GIT_DEFAULT_REMOTE='P:/ath/to/teams/remote_repo/folder')`
 #' or better still, put this value in your settings with `file.edit('~/.Renviron')`
 #'
-#' It is expected that a shared-drive folder 'origin' is used for all collaboration /
-#' projects, which in turn may have its own 'origin' pointing to a cloud service.
+#' It is possible to use an on-premises 'origin' remote which in turn synchronises
+#' with another server.
 #' This 'hybrid' is best achieved by using fully-fledged git installation set up
 #' to synchronise as a scheduled task or somehow triggered. The shared-drive
 #' remote repo can be overwritten with:
@@ -243,64 +249,96 @@ git_clone = function(repo_name='', to='~'){
 #'  - `git push`
 #'  - `git remote update --prune`
 #'
-#' @param repo_path Path of repo to modify parents of, "" or "." for default current repo
-#' @param remote_index Index of remote to edit / remove? (Integer vector or string)
-#' @param remote_name Name of remote to add (string of format "name='/path/or/url'", or "" for `GIT_DEFAULT_REMOTE`)
+#' @param remote_name Name of remote to add (such as 'origin') else leave NULL
+#'                    and answer interactively
+#' @param remote_path Path / URL of remote to add, empty string will use
+#'                    `GIT_DEFAULT_REMOTE` env variable, else leave NULL and
+#'                    answer interactively
 #' @returns Invisible NULL
 #' @export
-git_remote = function(repo_path = NULL, remote_index = NULL, remote_name = NULL){
+git_remote = function(remote_name = NULL, remote_path = NULL){
   # git_display_remotes()
 
-  repo = ask_generic('Path to repo to modify remotes? (Hit ENTER for current repo) ', answer=repo_path)
-  if(repo=='') repo='.'
+  default_remote = Sys.getenv('GIT_DEFAULT_REMOTE')
 
-  cat('Listing remotes for the remote / repo "',repo,'"\n', sep='')
-  # lookatrepo = c(remote_urls,remote_urls)[which(c(remote_names,remote_urls)==repo)[1] ]
-  if(!dir.exists(repo)) stop('Repo path "',repo,'" does not exist')
+  check_is_repo()
 
-  remote_names = git2r::remotes(repo=repo)
-  remote_urls = git2r::remote_url(repo=repo)
+  remote_names = git2r::remotes(repo='.')
+  remote_urls = git2r::remote_url(repo='.')
 
-  if(length(remote_names)==0) message('No remote yet!')
-  else{
-    cat('Existing remotes: \n')
-    if(length(remote_names)==0) message('None!')
-    else {
-      cat(paste0(sprintf("%-3d",seq_along(remote_names)),remote_names,"='",remote_urls,"'"), sep='\n')
-      remove_remotes = ask_which('Remote number to edit / remove? ', answer=remote_index)
-      if(length(remove_remotes)==1){
-        message('Removing ',remote_names[remove_remotes])
-        git2r::remote_remove(repo = repo, name = remote_names[remove_remotes])}
+  # List and Remove any remotes IF no arguments given
+  if(is.null(remote_name)){
+    if(length(remote_names)==0) {
+      message('No remote yet!')
+    } else {
+      cat('Existing remotes: \n')
+      if(length(remote_names)==0) message('None!')
+      else {
+        cat(paste0(sprintf("%-3d",seq_along(remote_names)),remote_names,"='",remote_urls,"'"), sep='\n')
+
+        # If using 'GIT_DEFAULT_REMOTE' - warn if this repo has something different
+        if(default_remote!=''){
+          origin_path = remote_names[remote_urls=='origin']
+          if(length(origin_path)==1){
+            if(!grepl(default_remote,origin_path))
+              message('Note: origin=',origin_path,' is not in GIT_DEFAULT_REMOTE=',default_remote)
+          }
+        }
+
+        remove_remotes = ask_which('Remote number to edit / remove? ')
+        if(length(remove_remotes)==1){
+          message('Removing ',remote_names[remove_remotes])
+          git2r::remote_remove(repo = '.', name = remote_names[remove_remotes])}
+      }
     }
   }
 
-  add_remote = ask_generic("Add remote? Specify with name='/path/or/url' or hit ENTER to add default origin or ESCAPE ", remote_name)
-
-  if(add_remote==''){
-    if(repo!='.') stop('Cannot automatically add default remote within GIT_DEFAULT_REMOTE unless repo is current directory ')
-
-    if(check_has_default_remote()==TRUE){
-      cat('Already has origin=\'',remote_urls[remote_names=='origin'],'\'',sep='')
+  # Default behaviour is to add 'origin' if it doesn't already exist
+  if(!'origin' %in% remote_names){
+    add_name = ask_generic("Hit ENTER to add 'origin' remote, else type remote name, or ESCAPE to cancel: ", answer=remote_name)
+    if(add_name=='') add_name = 'origin'
+  } else {
+    add_name = ask_generic("Type name of new remote, or ESCAPE to cancel: ", answer=remote_name)
+    if(add_name==''){
+      message('No new remote added')
       return(invisible())
     }
+  }
 
-    repo_name = basename(dirname(git2r::discover_repository()))
-    add_name = 'origin'
-    add_url = paste0(Sys.getenv('GIT_DEFAULT_REMOTE'),'/',repo_name)
-    message('Now run git_push() to complete setup of remote branches')
+  # Default behaviour is to use GIT_DEFAULT_REMOTE for 'origin' if it does exist
+  if(default_remote!='' & add_name=='origin'){
+    add_url = ask_generic(paste0("Path / URL for '",add_name,"' (hit ENTER to use default ",default_remote,"): "), answer=remote_path)
+    if(add_url==''){
+      repo_name = basename(dirname(git2r::discover_repository()))
+      add_url = paste0(Sys.getenv('GIT_DEFAULT_REMOTE'),'/',repo_name)
+    }
+  } else {
+    add_url = ask_generic(paste0("Path / URL for '",add_name,"': "), answer=remote_path)
+    if(add_url==''){
+      message('No new remote added')
+      return(invisible())
+    }
   }
-  else{
-    add_remote = gsub('[\'"]','',add_remote)
-    add_name = strsplit(add_remote,'=')[[1]][1]
-    add_url = strsplit(add_remote,'=')[[1]][2]
-  }
+
+  # Check whether any characters are illegal - maybe none?!
+  #if(grepl('/',add_name)) stop('Cannot have "/" in remote name')
 
   # If local path, will need to make the dir and init
   if(!grepl('^http',add_url)){
-    check_and_create_valid_repo(target_path=add_url)
+    use_bare = ask_proceed("Make remote a bare repository (recommended for 'origin' - see ?git_remote) (Y/N): ")
+    check_and_create_valid_repo(target_path=add_url, bare=use_bare)
   }
+
+  # Possibly allow GIT_DEFAULT_REMOTE to be a cloud path and have
+  # check_and_create_valid_url(target_path=add_url)
+  # which would call the various API for each major provider...
+  # Nah, so much easier to do this in browser!
 
   message('Adding ',add_name,' at ',add_url)
   git2r::remote_add(name=add_name, url=add_url)
+
+  if(add_name=='origin')
+    message('Now run git_push() to complete setup of remote branch tracking')
+
   return(invisible())
 }
