@@ -4,14 +4,7 @@
 \alias{git_add}
 \title{Git Add}
 \usage{
-git_add(remove_index = NULL, add_index = NULL)
-}
-\arguments{
-\item{remove_index}{Integer vector or character of file numbers to un-add?
-(Use "" to keep all)}
-
-\item{add_index}{Integer vector or character of file numbers to add?
-(Use "" to add all non-conflicting)}
+git_add()
 }
 \value{
 Invisible NULL

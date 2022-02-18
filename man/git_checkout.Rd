@@ -4,33 +4,37 @@
 \alias{git_checkout}
 \title{Git Checkout Commit}
 \usage{
-git_checkout(commit, onto_new_branch, force = FALSE)
+git_checkout(commit, onto_new_branch)
 }
 \arguments{
-\item{commit}{Commit hash or other identifier, as passed to git_get()}
+\item{commit}{Commit object as returned by git_get() or git_history()}
 
-\item{onto_new_branch}{Call git_branch() immediately to make a new active branch
-(otherwise will be left HEAD-less -- not on a branch at all!)}
-
-\item{force}{Allow all changes since last commit to be irreversibly deleted}
+\item{onto_new_branch}{Name of new branch to start from this historic commit}
 }
 \value{
 Invisible NULL
 }
 \description{
-Rewind the entire working directory to a previous commit or a different branch. Use
-this if you have made changes which you want to remove and start trying something
-else on a new branch. See \code{git_undo()} if you wish to irreversibly wind-back the
-current branch.
+Rewind the entire working directory to a previous commit and start a new branch
+from there. Use this if you want to backtrack reversibly. If you want to
+wind back irreversibly to a previous commit, use \code{git_undo()}.
 }
 \details{
+A typical work flow could be to retract three commits on the master branch.
+Use \code{git_checkout(commit=git_get(n=3), onto_new_branch='temp')}. Then move back
+to the master branch with \code{git_branch('master')} and merge the old version back
+in with \code{git_merge('temp')}.
+
+The alternative (\code{git_undo()} and then select 3rd commit) will delete all record
+of the three intermediate commits in the long run.
+
 As with changing branch, it is forbidden to change with changes yet-to-be-committed.
 This is to prevent irreversible loss if you ever wanted to change back again.
 
 There is currently no option to checkout a specific file, however this can be
-done by calling git_diff() and finding the named 'git4r_abc123' in
+done by calling \code{git_diff()} and finding the named 'git4r_abc123' in
 \code{tempdir()}
 }
 \seealso{
-git_history, git_diff, git_undo
+git_get, git_history, git_diff, git_undo
 }

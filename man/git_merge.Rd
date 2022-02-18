@@ -4,15 +4,11 @@
 \alias{git_merge}
 \title{Merge Branch into Current Branch}
 \usage{
-git_merge(branchname = NULL, deletebranch = NULL, proceed = NULL)
+git_merge(branchname = NULL)
 }
 \arguments{
-\item{branchname}{Name of other branch to merge into the current one}
-
-\item{deletebranch}{Delete branch after successful merge (this will never lose data) ("Y" or TRUE)}
-
-\item{proceed}{Confirm merge should proceed, even if conflicts arise ("Y" or TRUE).
-Recommended against using this argument which skips confirmation steps.}
+\item{branchname}{Name of other branch to merge into the current one, will be asled
+interactively if left as NULL.}
 }
 \value{
 Invisible NULL

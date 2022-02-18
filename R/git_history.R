@@ -267,7 +267,7 @@ git_filter_commits = function(list_of_commits, n=NULL, before=NULL,
 #' @param ...  Two arguments to be passed for which versions to select: can be
 #'             a commit object from git_history() or get_git(), or a single filter
 #'             argument which is passed to get_git().
-#' @returns A diffr htmlwidget object which is automatically opened in Rstudio Viewer tab
+#' @returns A diffr htmlwidget object which is automatically opened in RStudio Viewer tab
 #' @export
 git_diff = function(path = '.', ...){
   if(path=='') path='.'

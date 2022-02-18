@@ -4,14 +4,11 @@
 \alias{git_branch}
 \title{Git Branch}
 \usage{
-git_branch(branchname = NULL, deletebranch = NULL)
+git_branch(branchname = NULL)
 }
 \arguments{
 \item{branchname}{Branch name to move to or create, use empty string "" to list
-existing branches}
-
-\item{deletebranch}{If moving off a branch which has no commits on it, should the departed
-branch be deleted? "Y" or TRUE, else FALSE}
+existing branches. This is asked interactively if left as NULL.}
 }
 \value{
 Invisible NULL

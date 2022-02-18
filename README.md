@@ -37,7 +37,8 @@ package uses environmental variables for default behaviour, including personal
 access tokens (which are not required if you use a local remote directory).
 
 Use of `GIT_DEFAULT_REMOTE` is entirely optional and is particularly for 
-organisations wishing to have an entirely on-premises git workflow. 
+organisations wishing to have an entirely on-premises git workflow or issues
+around a corporate proxy.
 
 ``` r
 install.packages('git4r')

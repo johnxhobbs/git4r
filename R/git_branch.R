@@ -120,7 +120,7 @@ git_branch = function(branchname = NULL){
 #' code-from-the-branch-you-have-just-merged
 #' >>>>>>> merged-branch-name
 #' }
-#' @param branchname Name of other branch to merge into the current one, will be asled
+#' @param branchname Name of other branch to merge into the current one, will be asked
 #'          interactively if left as NULL.
 #' @returns Invisible NULL
 #' @export

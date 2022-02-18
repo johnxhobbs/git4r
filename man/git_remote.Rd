@@ -2,35 +2,44 @@
 % Please edit documentation in R/git_remote.R
 \name{git_remote}
 \alias{git_remote}
-\title{Git Edit Remotes}
+\title{Git Modify Remotes}
 \usage{
-git_remote(repo_path = NULL, remote_index = NULL, remote_name = NULL)
+git_remote(remote_name = NULL, remote_path = NULL)
 }
 \arguments{
-\item{repo_path}{Path of repo to modify parents of, "" or "." for default current repo}
+\item{remote_name}{Name of remote to add (such as 'origin') else leave NULL
+and answer interactively}
 
-\item{remote_index}{Index of remote to edit / remove? (Integer vector or string)}
-
-\item{remote_name}{Name of remote to add (string of format "name='/path/or/url'", or "" for \code{GIT_DEFAULT_REMOTE})}
+\item{remote_path}{Path / URL of remote to add, empty string will use
+\code{GIT_DEFAULT_REMOTE} env variable, else leave NULL and
+answer interactively}
 }
 \value{
 Invisible NULL
 }
 \description{
-View and interactively add or edit remotes for this repo or another. When
-adding a local shared-drive remote, it will create a bare git repo in the
-GIT_DEFAULT_REMOTE directory with the name of the current project.
+View and interactively edit remotes for this repo. The most important of these
+is 'origin' which will be used by \code{git_pull()}, however you may also want a
+write-only mirror, for example where you push a production-ready commit. If
+GIT_DEFAULT_REMOTE environmental value has been set, this will be suggested
+for 'origin'.
 }
 \details{
-Within git4r branches will always track the 'origin' remote.
+If using a filesystem path for the remote, the option is given to create a full
+working tree (copy of all files) or bare repository. A bare repository is
+recommended for 'origin' because no one should make any changes to this directly
+(instead, clone their own copy). For pushing to a 'backup' or 'production' remote,
+you will want to push a copy of the files themselves.
 
-Across your team, create a folder that you all have read/write permissions
-to and nominate it as the location for all remotes using:
-\code{Sys.setenv(GIT_DEFAULT_REMOTE='P:/ath/to/teams/remote_repo/folder')}
+If you have set \code{GIT_DEFAULT_REMOTE} environmental value this will be suggested
+as the path for creating an 'origin' remote. This will make life easier because
+it will be the same as the rest of your projects / team and will be searched
+by \code{git_clone()}.
+Use \code{Sys.setenv(GIT_DEFAULT_REMOTE='P:/ath/to/teams/remote_repo/folder')}
 or better still, put this value in your settings with \code{file.edit('~/.Renviron')}
 
-It is expected that a shared-drive folder 'origin' is used for all collaboration /
-projects, which in turn may have its own 'origin' pointing to a cloud service.
+It is possible to use an on-premises 'origin' remote which in turn synchronises
+with another server.
 This 'hybrid' is best achieved by using fully-fledged git installation set up
 to synchronise as a scheduled task or somehow triggered. The shared-drive
 remote repo can be overwritten with:

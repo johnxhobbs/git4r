@@ -18,7 +18,6 @@ use git to keep parallel versions, view, and restore history.
 
 ```
 > library(git4r)
-Using global (system default) config: johnhobbs <johnhobbs@myemail>
 ```
 ```
 > myproject = tempfile(pattern = 'test-git-project-')
@@ -44,11 +43,11 @@ you don't start git-tracking your entire home directory!
 
 ```
 > git_add()
-test-git-project directory is not inside a git repository - check this is the top level else ESCAPE and setwd()
+test-git-project-40a3cbf1356 directory is not inside a git repository - check this is the top level else ESCAPE and setwd()
 Should this directory be turned into a git repo? (Y/N) Y
 
 Copying default .gitignore to working directory
-test-git-project is now a git repo 
+test-git-project-40a3cbf1356 is now a git repo 
 
 Modified files to be added (+ created, - deleted, * changed since added, ? conflict) 
 1    +  .gitignore
@@ -87,6 +86,7 @@ We can now commit all of these changes -- our first checkpoint
 
 ```
 > git_commit()
+Using global (system default) identity: myname <myname@email>
 Commit message: My first commit
 
 Commit to master? (hit ESCAPE to cancel) 
@@ -115,6 +115,7 @@ Adding 4 file(s)
 ```
 ```
 > git_commit()
+Using global (system default) identity: myname <myname@email>
 Commit message: Add some more files and made some changes
 
 Commit to master? (hit ESCAPE to cancel) 
@@ -189,6 +190,7 @@ Which file numbers to add? (Hit ENTER to add all non-conflicting, else ESCAPE)
 ```
 ```
 > git_commit()
+Using global (system default) identity: myname <myname@email>
 Commit message: Experimental changes on test-branch
 
 Commit to test-branch? (hit ESCAPE to cancel) 
@@ -244,6 +246,7 @@ Adding 2 file(s)
 ```
 ```
 > git_commit()
+Using global (system default) identity: myname <myname@email>
 Commit message: Added a change to E and H which are not in test-branch
 
 Commit to master? (hit ESCAPE to cancel) 
@@ -297,6 +300,7 @@ Adding 1 file(s)
 ```
 ```
 > git_commit()
+Using global (system default) identity: myname <myname@email>
 Commit message: Completed the merge of our test code
 
 Commit to master? (hit ESCAPE to cancel) 
@@ -396,15 +400,16 @@ Here we will add the default origin which means saving a copy in the
 `GIT_DEFAULT_REMOTE` folder path.
 ```
 > git_remote()
-Path to repo to modify remotes? (Hit ENTER for current repo) 
-
-Listing remotes for the remote / repo "."
 No remote yet!
-Add remote? Specify with name='/path/or/url' or hit ENTER to add default origin or ESCAPE 
+Hit ENTER to add 'origin' remote, else type remote name, or ESCAPE to cancel: 
 
-Now run git_push() to complete setup of remote branches
+Path / URL for 'origin' (hit ENTER to use default /tmp/test-default-remote): 
+
+Make remote a bare repository (recommended for 'origin' - see ?git_remote) (Y/N): Y
+
 Creating bare repo at /tmp/test-default-remote/test-git-project
 Adding origin at /tmp/test-default-remote/test-git-project
+Now run git_push() to complete setup of remote branch tracking
 ```
 ```
 > git_push()

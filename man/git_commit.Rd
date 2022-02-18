@@ -4,14 +4,11 @@
 \alias{git_commit}
 \title{Git Commit}
 \usage{
-git_commit(message = NULL, proceed = NULL)
+git_commit(message = NULL)
 }
 \arguments{
 \item{message}{Commit message, usually one sentence about a specific change,
-character atomic.}
-
-\item{proceed}{Confirmation before proceeding, logical atomic with option for
-any character string starting 'Y' to be interpreted as \code{TRUE}}
+character atomic. This is asked for interactively if left NULL.}
 }
 \value{
 Invisible NULL

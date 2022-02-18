@@ -4,14 +4,10 @@
 \alias{git_push}
 \title{Git Push}
 \usage{
-git_push(do_default = NULL, remote_index = NULL, branch_index = NULL)
+git_push(do_default = NULL)
 }
 \arguments{
 \item{do_default}{Confirm that the default push-all-tracking-branches-to-origin ("Y" or TRUE)}
-
-\item{remote_index}{If this is not true, selection of remote to push to (integer vector)}
-
-\item{branch_index}{The selection of branches to push (integer vector)}
 }
 \value{
 Invisible NULL
