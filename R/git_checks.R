@@ -184,4 +184,32 @@ Not all changes have been committed! Run git_diff() to see what.
   } else return(TRUE)
 }
 
+# Confirm that a valid git user exists and print it
+check_username = function(){
 
+  # Load your user settings
+  local_user = git2r::config()$local$user.name
+  local_email = git2r::config()$local$user.email
+  global_user = git2r::config()$global$user.name
+  global_email = git2r::config()$global$user.email
+
+  if(!is.null(local_user) & !is.null(local_email)){
+    cat('Using local (repo-specific) identity: ',local_user,' <',local_email,'>', sep='')
+    return(invisible(TRUE))
+  } else if(!is.null(global_user) & !is.null(global_email)){
+    cat('Using global (system default) identity: ',global_user,' <',global_email,'>', sep='')
+    return(invisible(TRUE))
+  } else {
+    message('No config values for user.name and user.email could be found, these are required to commit')
+    set_global = ask_proceed('Set up global config for this user? (Y, or N to use repo-specific, or ESCAPE to cancel) ')
+    set_user = ask_generic('user.name: ')
+    set_email = ask_generic('user.email: ')
+    if(nchar(set_user)==0 | nchar(set_email)==0)
+      stop('Cannot leave either user.name or user.email blank')
+    git2r::config(global=set_global, user.name=set_user, user.email=set_email)
+    message('Done')
+    # Now confirm values being used
+    cat('Using ',if(set_global) 'global' else 'local',' identity: ',global_user,' <',global_email,'>', sep='')
+    return(invisible(TRUE))
+  }
+}

@@ -45,13 +45,11 @@ install.packages('git4r')
 #  dependency trail of diffr, however this is only for the most
 #  extreme minimal installations, and git_diff() will not work)
 
-# This package makes use of environmental variables to look for configuration
-# None are essential if a repositroy already has a remote and user details
-# but otherwise these values will be looked for.
+# This package uses environmental variables to store the path of an on-premises
+# remote (where push and clone will default to) and any Personal Access Tokens
+# for cloud-based remote access.
 file.edit('~/.Renviron')
 GIT_DEFAULT_REMOTE=L:/ocal/shared/directory
-GIT_USER=myname
-GIT_EMAIL=myemail@company.com
 GIT_PAT_GITHUB=credentials-are-automatically-pulled-from-here
 GIT_PAT_BITBUCKET=or-here-whichever-name-matches-the-url-best
 ```

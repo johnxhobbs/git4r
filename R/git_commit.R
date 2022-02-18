@@ -153,6 +153,8 @@ git_commit = function(message = NULL, proceed = NULL){
 
   check_is_repo() # This will throw error if not
 
+  check_username() # Must have a valid name / email to commit
+
   # Optionally run git_add() to show you what you are commiting
   message = ask_generic('Commit message: ', answer=message)
   if(message==''){
