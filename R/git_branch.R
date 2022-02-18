@@ -21,13 +21,11 @@
 #' @seealso git_merge
 #'
 #' @param branchname  Branch name to move to or create, use empty string "" to list
-#'                existing branches
-#' @param deletebranch If moving off a branch which has no commits on it, should the departed
-#'                branch be deleted? "Y" or TRUE, else FALSE
+#'                existing branches. This is asked interactively if left as NULL.
 #'
 #' @returns Invisible NULL
 #' @export
-git_branch = function(branchname = NULL, deletebranch = NULL){
+git_branch = function(branchname = NULL){
   current_head = git2r::repository_head()
   current_branch = current_head$name
   cat('Current active branch: ',current_branch)
@@ -65,7 +63,7 @@ git_branch = function(branchname = NULL, deletebranch = NULL){
       git2r::checkout(branch=branch, create=TRUE)
       cat('Moved invisibly from',current_branch,'back to',branch)
       if(isTRUE(!current_branch %in% c('main','master',branch))){
-        if(ask_proceed(paste0('Delete the unused branch ',current_branch,'? (Y/N) '), answer=deletebranch))
+        if(ask_proceed(paste0('Delete the unused branch ',current_branch,'? (Y/N) ')))
           git2r::branch_delete(branches[[current_branch]])
       }
       # TODO
@@ -122,13 +120,11 @@ git_branch = function(branchname = NULL, deletebranch = NULL){
 #' code-from-the-branch-you-have-just-merged
 #' >>>>>>> merged-branch-name
 #' }
-#' @param branchname Name of other branch to merge into the current one
-#' @param deletebranch Delete branch after successful merge (this will never lose data) ("Y" or TRUE)
-#' @param proceed  Confirm merge should proceed, even if conflicts arise ("Y" or TRUE).
-#'                 Recommended against using this argument which skips confirmation steps.
+#' @param branchname Name of other branch to merge into the current one, will be asled
+#'          interactively if left as NULL.
 #' @returns Invisible NULL
 #' @export
-git_merge = function(branchname = NULL, deletebranch = NULL, proceed = NULL){
+git_merge = function(branchname = NULL){
   current_branch = git2r::repository_head()$name
 
   # Check no uncommitted files
@@ -152,7 +148,7 @@ git_merge = function(branchname = NULL, deletebranch = NULL, proceed = NULL){
   proceed = ask_proceed('Proceed? (Y/N) ', answer=proceed)
   if(!proceed) return(invisible())
 
-  delete_after = ask_proceed('Delete this branch after successful merge? (Y/N) ', answer=deletebranch)
+  delete_after = ask_proceed('Delete this branch after successful merge? (Y/N) ')
 
   message('Merging ',merge_branch,' into ',current_branch)
   # Try the first time to see if there are any conflicts

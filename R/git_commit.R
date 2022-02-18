@@ -40,13 +40,9 @@ git = function(){
 #' interactive questions asked. It is highly recommended that you do not rely
 #' on passing arguments because it is operating blind.
 #'
-#' @param remove_index Integer vector or character of file numbers to un-add?
-#'              (Use "" to keep all)
-#' @param add_index Integer vector or character of file numbers to add?
-#'              (Use "" to add all non-conflicting)
 #' @returns Invisible NULL
 #' @export
-git_add = function(remove_index = NULL, add_index = NULL){
+git_add = function(){
 
   check_is_repo() # This will throw error if not
 
@@ -78,7 +74,7 @@ git_add = function(remove_index = NULL, add_index = NULL){
               added_symbol,
               added_already, sep='  '), sep='\n')
 
-    unstage_these = ask_which('Any file numbers to un-add? (Hit ENTER to keep all) ', answer=remove_index)
+    unstage_these = ask_which('Any file numbers to un-add? (Hit ENTER to keep all) ')
 
     if(length(unstage_these) > 0){
       # Cannot unstage things when there has not been a first commit
@@ -113,7 +109,7 @@ git_add = function(remove_index = NULL, add_index = NULL){
             not_yet_added, sep='  '), sep='\n')
 
 
-  add_these = ask_which('Which file numbers to add? (Hit ENTER to add all non-conflicting, else ESCAPE) ', answer=add_index)
+  add_these = ask_which('Which file numbers to add? (Hit ENTER to add all non-conflicting, else ESCAPE) ')
   add_these = add_these[!is.na(add_these)]
   if(length(add_these) > 0){
     message('Adding ',length(not_yet_added[add_these]),' file(s)')
@@ -144,12 +140,10 @@ git_add = function(remove_index = NULL, add_index = NULL){
 #' (`git_commit()`)
 #'
 #' @param message Commit message, usually one sentence about a specific change,
-#'                character atomic.
-#' @param proceed Confirmation before proceeding, logical atomic with option for
-#'                any character string starting 'Y' to be interpreted as `TRUE`
+#'                character atomic. This is asked for interactively if left NULL.
 #' @returns Invisible NULL
 #' @export
-git_commit = function(message = NULL, proceed = NULL){
+git_commit = function(message = NULL){
 
   check_is_repo() # This will throw error if not
 
@@ -166,7 +160,7 @@ git_commit = function(message = NULL, proceed = NULL){
   current_branch = git2r::repository_head()$name
   if(length(current_branch)==0) current_branch = 'master'
 
-  ask_proceed(paste0('Commit to ',current_branch,'? (hit ESCAPE to cancel) '), answer=proceed)
+  ask_proceed(paste0('Commit to ',current_branch,'? (hit ESCAPE to cancel) '))
 
   git2r::commit(message=message)
   message('Done')

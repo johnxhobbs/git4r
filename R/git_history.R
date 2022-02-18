@@ -2,51 +2,52 @@
 
 #' Git Checkout Commit
 #'
-#' Rewind the entire working directory to a previous commit or a different branch. Use
-#' this if you have made changes which you want to remove and start trying something
-#' else on a new branch. See `git_undo()` if you wish to irreversibly wind-back the
-#' current branch.
+#' Rewind the entire working directory to a previous commit and start a new branch
+#' from there. Use this if you want to backtrack reversibly. If you want to
+#' wind back irreversibly to a previous commit, use `git_undo()`.
+#'
+#' A typical work flow could be to retract three commits on the master branch.
+#' Use `git_checkout(commit=git_get(n=3), onto_new_branch='temp')`. Then move back
+#' to the master branch with `git_branch('master')` and merge the old version back
+#' in with `git_merge('temp')`.
+#'
+#' The alternative (`git_undo()` and then select 3rd commit) will delete all record
+#' of the three intermediate commits in the long run.
 #'
 #' As with changing branch, it is forbidden to change with changes yet-to-be-committed.
 #' This is to prevent irreversible loss if you ever wanted to change back again.
 #'
 #' There is currently no option to checkout a specific file, however this can be
-#' done by calling git_diff() and finding the named 'git4r_abc123' in
+#' done by calling `git_diff()` and finding the named 'git4r_abc123' in
 #' `tempdir()`
 #'
-#' @seealso git_history, git_diff, git_undo
+#' @seealso git_get, git_history, git_diff, git_undo
 #'
-#' @param commit Commit hash or other identifier, as passed to git_get()
-#' @param onto_new_branch Call git_branch() immediately to make a new active branch
-#'               (otherwise will be left HEAD-less -- not on a branch at all!)
-#' @param force  Allow all changes since last commit to be irreversibly deleted
+#' @param commit Commit object as returned by git_get() or git_history()
+#' @param onto_new_branch Name of new branch to start from this historic commit
 #' @returns Invisible NULL
 #' @export
-git_checkout = function(commit, onto_new_branch, force = FALSE){
+git_checkout = function(commit, onto_new_branch){
+
+  if(!inherits(commit, 'git_commit')) stop('commit is not a valid git_commit object: use output of git_get() or git_history()')
 
   check_everything_committed()
-  # if(!everything_committed){
-  #   if(force==TRUE) message('Changes will be irreversibly lost if you proceed -- see git_diff()')
-  #   else{
-  #     message('Not all changes have been committed to current branch -- highly recommended otherwise use force=TRUE\n See diff for unsaved work')
-  #     return(git_diff('.', n=1, NULL))
-  #   }
-  # }
+
   already_exists = onto_new_branch %in% names(git2r::branches())
   if(already_exists) stop('Branch \'',onto_new_branch,'\' already exists -- must create a new branch')
 
   print(commit)
   proceed = ask_proceed(paste0('Rewind working directory to this commit and start new branch ',onto_new_branch,'? (Y/N) '))
   if(proceed){
-    git2r::checkout(object=commit, force=force)
+    git2r::checkout(object=commit, force=TRUE)
     message('Done')
     # This ends up with a detached HEAD every time
     # Can do the same thing with reset --hard which will change the HEAD, staging area, and working directory
     # git2r::reset(object=commit, reset_type='hard', path='.')
 
-    git_branch(branchname=onto_new_branch, deletebranch=FALSE)
-
+    git_branch(branchname=onto_new_branch)
   }
+  return(invisible())
 }
 
 #' Reset To Any Previous Commit

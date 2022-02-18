@@ -20,7 +20,7 @@
 #' @param branch_index The selection of branches to push (integer vector)
 #' @returns Invisible NULL
 #' @export
-git_push = function(do_default = NULL, remote_index = NULL, branch_index = NULL){
+git_push = function(do_default = NULL){
 
   # Get branch info
   local_branches = names(git2r::branches(flags='local'))
@@ -57,7 +57,7 @@ git_push = function(do_default = NULL, remote_index = NULL, branch_index = NULL)
   if(length(available_remotes)==1)
     remote_index = 1
 
-  remote = available_remotes[ask_which('Index number of remote to push to: ', answer=remote_index)]
+  remote = available_remotes[ask_which('Index number of remote to push to: ')]
   if(length(remote)!=1) stop('Must give exactly one remote. If none exist, use git_remote()')
 
   # Only causes error on the first ever commit-push
@@ -78,7 +78,7 @@ git_push = function(do_default = NULL, remote_index = NULL, branch_index = NULL)
             ifelse(local_branches==current_branch,'>',' '),
             local_branches, sep='  '), sep='\n')
 
-  add_these = ask_which('Which branch numbers to push? (Hit ENTER to add all except + else ESCAPE) ', answer=branch_index)
+  add_these = ask_which('Which branch numbers to push? (Hit ENTER to add all except + else ESCAPE) ')
   if(length(add_these)==0) add_these = already_pushed
 
   if(!current_branch %in% local_branches[add_these]){
@@ -216,31 +216,13 @@ git_clone = function(repo_name='', to='~'){
 }
 
 
-# TODO allow this to look at http if no proxy
-git_display_remotes = function(url='.', prefix=''){
-  if(length(url)==0) return()
-  if(!dir.exists(url)) return()
-
-  subnames =  git2r::remotes(url)
-  suburl = git2r::remote_url(url)
-
-  #tryCatch({suburl = git2r::remote_url(remurl)}, error = function(err) {return(err)})
-  prefix = paste0('-- ',prefix)
-  for(i in seq_along(suburl)){
-    cat(prefix, subnames[i],'=\'',suburl[i],'\'\n', sep='')
-    git_display_remotes(suburl, prefix=prefix)
-  }
-  return(invisible())
-}
-
-
 #' Git Edit Remotes
 #'
 #' View and interactively add or edit remotes for this repo or another. When
 #' adding a local shared-drive remote, it will create a bare git repo in the
 #' GIT_DEFAULT_REMOTE directory with the name of the current project.
 #'
-#' Within git4r branches will always track the 'origin' remote.
+#' Within `git4r`, branches will always track the 'origin' remote.
 #'
 #' Across your team, create a folder that you all have read/write permissions
 #' to and nominate it as the location for all remotes using:
