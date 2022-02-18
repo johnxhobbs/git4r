@@ -7,7 +7,7 @@
 git_merge(branchname = NULL)
 }
 \arguments{
-\item{branchname}{Name of other branch to merge into the current one, will be asled
+\item{branchname}{Name of other branch to merge into the current one, will be asked
 interactively if left as NULL.}
 }
 \value{

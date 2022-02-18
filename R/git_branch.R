@@ -145,7 +145,7 @@ git_merge = function(branchname = NULL){
   if(!branch_exists) stop(merge_branch,' is not a branch')
 
   cat('Merge',merge_branch,'into',current_branch,'\n')
-  proceed = ask_proceed('Proceed? (Y/N) ', answer=proceed)
+  proceed = ask_proceed('Proceed? (Y/N) ')
   if(!proceed) return(invisible())
 
   delete_after = ask_proceed('Delete this branch after successful merge? (Y/N) ')
@@ -159,7 +159,7 @@ git_merge = function(branchname = NULL){
     return(invisible())
   }
   if(merge_res$conflicts==TRUE){
-    proceed = ask_proceed('This merge will result with conflicts to resolve manually. Continue anyway? (Y/N) ', answer=proceed)
+    proceed = ask_proceed('This merge will result with conflicts to resolve manually. Continue anyway? (Y/N) ')
     if(proceed==FALSE) {
       message("Merge cancelled: use git_diff() to investigate ")
       return(invisible())}
@@ -182,7 +182,7 @@ git_merge = function(branchname = NULL){
     git2r::branch_delete(branch=git2r::branches()[[merge_branch]])}
 
   if(merge_res$conflicts==TRUE){
-    proceed = ask_proceed('Open the conflicting files and resolve <<<???>>> now? (Y/N) ', answer=NULL)
+    proceed = ask_proceed('Open the conflicting files and resolve <<<???>>> now? (Y/N) ')
     if(proceed==FALSE){
       cat('You must go through each file before you git_add()\n')
       return(invisible())}
