@@ -81,6 +81,11 @@ git_push = function(do_default = NULL, remote_index = NULL, branch_index = NULL)
   add_these = ask_which('Which branch numbers to push? (Hit ENTER to add all except + else ESCAPE) ', answer=branch_index)
   if(length(add_these)==0) add_these = already_pushed
 
+  if(!current_branch %in% local_branches[add_these]){
+    message('Current branch not included - will not push anything')
+    return(invisible())
+  }
+
   # TODO work out why this error sometimes comes up?
   # 'git2r_branch_set_upstream': cannot set upstream for branch
   # if(!current_branch %in% local_branches[add_these])
