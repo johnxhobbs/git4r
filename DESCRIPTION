@@ -21,6 +21,7 @@ Imports:
     diffr,
     utils
 Suggests:
+    gitcreds,
     rstudioapi,
     knitr,
     rmarkdown

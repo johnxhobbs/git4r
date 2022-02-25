@@ -65,10 +65,27 @@ choose_credential = function(remote=''){
   is_http = grepl('^http',remote)
   if(!is_http) return(git2r::cred_user_pass('',''))
 
+
+  # Try and use 'gitcreds' package to find the system-wide credential for this
+  # URL. If it cannot find it, or 'gitcreds' not even installed! then move on
+  # and do the basic approach of looking for best match in .Renviron
+  possible_creds = tryCatch(gitcreds::gitcreds_get(url=remote), error=function(err) return(NULL) )
+  if(!is.null(possible_creds)){
+    return(git2r::cred_user_pass(username=possible_creds$username, password=possible_creds$password))
+  }
+
+  # Now look for GIT_PAT_ tokens in .Revniron
   all_env_var = names(Sys.getenv())
   all_env_var = all_env_var[grepl('^GIT_PAT',all_env_var)]
   choose_best = utils::adist(toupper(remote), toupper(all_env_var), costs = c(i=1,d=0,s=1))
   choose_best = all_env_var[which.min(choose_best)]
+
+  if(length(choose_best)==0)
+    stop('Credentials could not be found. Create a Personal Access Token and save to .Renviron ',
+         'with the name "GIT_PAT_****" replacing **** with host name, such as GITHUB or AZURE. ',
+         'Alternatively, install \'gitcreds\' package to use credentials from system-wide git. ',
+         'See ?git_push for further details')
+
   #message('Using token: ',choose_best)
   return(git2r::cred_token(token=choose_best))
 }

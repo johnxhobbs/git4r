@@ -22,9 +22,16 @@ It is enforced that when pushing to 'origin' the branch is set to track this
 remote branch. If the branch does not exist yet in the remote, it is not
 pushed by default and must be manually added.
 
-Credentials are sorted in the same way as git_pull() and git_push()
-using the best-matching \verb{GIT_PAT*} environmental variable to the remote's
-address, for example \verb{GIT_PAT_AZURE=} in \verb{~/.Renviron}
+Credentials are sorted in the same way as git_pull() and git_push(). If
+\code{gitcreds} package is installed, this is used first to check whether the
+system git installation already has a username / password for this host.
+This can be changed or added using stand-alone git, or \code{gitcreds::gitcreds_set()}.
+
+Alternatively, the simpler approach is to create a Personal Access Token and
+save it into your \code{.Renviron} file. The variable name must begin \code{GIT_PAT}
+and any additional words are used to distinguish the PAT for the relevant
+host, for example \code{GIT_PAT_AZURE=abc123def456} will be chosen to authenticate
+an Azure DevOps remote instead of \code{GIT_PAT_GITHUB} or \code{GIT_PAT_GITLAB}.
 }
 \seealso{
 git_pull, git_remote
