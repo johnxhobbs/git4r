@@ -1,21 +1,29 @@
+# Based on gitignore.io (see the 'gitignore' package)
+
 # Any RStudio user-specific files
 .Renviron
 .Rhistory
 .Rapp.history
 .RData
+.RDataTmp
 .Rproj.user/
 .Ruserdata
 .httr-oauth
+rsconnect/
 
 # Output files from R CMD build / check / example code / vignettes
+*-Ex.R
 /*.tar.gz
 /*.Rcheck/
 *-Ex.R
 vignettes/*.html
 vignettes/*.pdf
 
-# Any markdown temporary files
+# Any markdown / pkgdown / translation / bookdown temporary files
 *_cache/
 /cache/
 *.utf8.md
 *.knit.md
+docs/
+po/*~
+/*_files/
