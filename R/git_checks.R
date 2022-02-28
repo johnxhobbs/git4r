@@ -131,12 +131,13 @@ check_and_create_valid_repo = function(target_path, here='.',bare=TRUE){
       if(!git2r::is_bare(target_path) & bare==TRUE){
         # Bare repo already here!
         stop('This is a working directory, not a bare git repo. Call again with bare=FALSE to proceed')
-      }
-      else{
-        tryCatch({remote_latest_commit = git2r::last_commit(target_path)$sha},
-                 error=function(err) {
-                   message('No commits made yet: allowing add')
-                   return(TRUE)})
+      } else {
+        remote_latest_commit = tryCatch(git2r::last_commit(target_path)$sha,
+                                        error=function(err) return(NULL))
+        if(is.null(remote_latest_commit)){
+          message('No commits made yet: allowing add')
+          return(TRUE)
+        }
         # Check if this repo is empty
         if(length(remote_latest_commit)==0){
           message('Found an empty bare repo which has zero commits so can be requisitioned')
@@ -150,12 +151,10 @@ check_and_create_valid_repo = function(target_path, here='.',bare=TRUE){
           message('This remote shares the same git history: allowing add')
           return(TRUE)
         }
-
         stop(target_path,' already a git repo! Choose a different project dir name, or use git_clone() to merge')}
     }
     stop(target_path,' not empty, nor git repo')
-  }
-  else{
+  } else {
     # Directory does NOT exist yet
     #ask_proceed('Create directory as git remote repo? (Y/N) ')
     message('Creating', if(bare) ' bare' ,' repo at ',target_path)
