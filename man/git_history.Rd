@@ -30,11 +30,14 @@ Vector of commit objects invisibly
 Single commit object
 }
 \description{
-Display the history of commits in specific branch with the option to filter.
+Display the history of commits in a specific branch with the option to filter.
 The list of commits is returned invisibly and can be extracted using \verb{[[i]]}
-alternatively use git_get() to return the newest meeting a certain filter.
+alternatively use \code{git_get()} to return the newest commit after filtering.
 }
 \details{
+By default the history of the current branch is returned. The commits of a remote
+branch can be found using \verb{branch='origin/master}, for example.
+
 The following filter arguments can be given:
 \itemize{
 \item \code{n} - integer vector of commits back from latest (1 = most recent commit)
@@ -44,5 +47,7 @@ The following filter arguments can be given:
 \item \code{author} and \code{email} - regular expression string of author or email of the commit
 }
 
-If nothing could be matched, get_git() will start looking on other branches.
+If nothing could be matched, \code{get_git()} will start looking on other branches,
+for example when looking for a particular hash. The user is notified if this
+happens.
 }

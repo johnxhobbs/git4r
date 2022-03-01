@@ -14,23 +14,24 @@ interactively if left as NULL.}
 Invisible NULL
 }
 \description{
-For good house-keeping, the merged branch is by default deleted, this can be
-recreated any time using git_branch(). Conflict resolution is yet to be
-implemented, for now the most recent of a file is kept unless changes have
-happened in both branches.
+Merge a different branch into the current branch. The user is asked interactively
+to delete the merged (and now expendable) branch, and any conflicts arising are
+printed and the option given to open the files immediately for editing. Any
+files which resulted in conflicts will be flagged by \code{git_add()} to remind
+the user to manually confirm conflicts are resolved.
 }
 \details{
-A really neat tool in RStudio is \code{Edit} -> \verb{Find in Files...} which allows
+A very helpful tool in RStudio is \code{Edit} -> \verb{Find in Files...} which allows
 you to search your entire repository for where the conflicts are. These are
 identified by searching for the chevrons <<<
 
-Conflicts are the usual format for git and may also happen after git_pull().
+Conflicts are the usual format for git and may also happen after \code{git_pull()}
 
 \preformatted{
 <<<<<<< HEAD
 code-from-the-branch-you-have-stayed-on
 =======
-code-from-the-branch-you-have-just-merged
->>>>>>> merged-branch-name
+code-from-the-branch-you-have-just-merged-and-deleted
+>>>>>>> merged-and-deleted-branch-name
 }
 }

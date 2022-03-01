@@ -10,17 +10,15 @@ git_pull()
 Invisible NULL
 }
 \description{
-This will pull any updates from the remote which each branch is tracking.
-This is set using git_remote() to be the 'origin' remote, usually at
-GIT_DEFAULT_REMOTE. This should be run before any new commits.
+This will pull any updates from the 'origin' remote for every branch.
+This should be run before making a commit (as is done by wrapper \code{git()}) in
+order to avoid conflicts arising if somebody else has made changes
+on the same branch. If this happens, merge conflicts are raised in the usual
+way and \code{git_add()} will show you what needs resolving.
 }
 \details{
-If git_push() has not been run yet, it will complain that branches are not
-set to track anything. If so, run git_remote() and git_push() to synchronise.
-
-Credentials are sorted in the same way as git_pull() and git_push()
-using the best-matching \code{GIT_PAT}* environmental variable to the remote's
-address, for example \verb{GIT_PAT_AZURE=} in \verb{~/.Renviron}
+To setup an 'origin' remote, use \code{git_remote()}. Credentials are handled
+in the same way as \code{git_push()}, see \code{?git_push} for details.
 }
 \seealso{
 git_push, git_remote

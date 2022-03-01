@@ -4,26 +4,29 @@
 \alias{git_clone}
 \title{Git Clone from Default Remote}
 \usage{
-git_clone(repo_name = "", to = "~")
+git_clone(repo_name = "", to = "~/")
 }
 \arguments{
 \item{repo_name}{Name of repo to clone, leave blank to display a list of available
 repo names. Also accepted is the url or complete filepath to a
 repo to clone (identified if containing '/').}
 
-\item{to}{Local path to create local project folder in, defaults to My Documents}
+\item{to}{Local path to create local project folder in, defaults to home directory}
 }
 \value{
 Invisible NULL
 }
 \description{
-Running without any repo_name will print a list of valid repos found at the
-GIT_DEFAULT_REMOTE path, and can then be re-run with one of these names to
-clone a local version. Otherwise a url or complete filepath can be used.
+Clone another repository given as a URL of absolute filepath. Alternatively,
+if \code{GIT_DEFAULT_REMOTE} environmental variable has been set
+a list of repositories within this path is displayed and can be cloned by name.
 }
 \details{
-To change where the default remote path is use
-\itemize{
-\item \code{Sys.setenv(GIT_DEFAULT_REMOTE='P:/ath/to/teams/remote_repo/folder')}
-}
+Running \code{repo_name=""} will print a list of valid repositories found at the
+\code{GIT_DEFAULT_REMOTE} path, and can then be re-run with one of these names to
+clone a local version. This is to make basic on-premises collaboration and backups
+more effortless. \code{GIT_DEFAULT_REMOTE} can be set in .Renviron file as per \code{?git_remote}
+
+Other repositories can be cloned as expected by giving a URL. Credentials are handled
+automatically in the same way as \code{?git_push}.
 }

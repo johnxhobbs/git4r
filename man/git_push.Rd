@@ -7,7 +7,10 @@
 git_push(do_default = NULL)
 }
 \arguments{
-\item{do_default}{Confirm that the default push-all-tracking-branches-to-origin ("Y" or TRUE)}
+\item{do_default}{Character or logical passed as the answer to the interactive question
+which is "push the current branch to origin". If 'Y' or TRUE, this function
+runs without user input (used by \code{git()}), the default value \code{NULL} will
+prompt the user to answer interactively.}
 }
 \value{
 Invisible NULL
@@ -22,16 +25,23 @@ It is enforced that when pushing to 'origin' the branch is set to track this
 remote branch. If the branch does not exist yet in the remote, it is not
 pushed by default and must be manually added.
 
-Credentials are sorted in the same way as git_pull() and git_push(). If
+Credentials are sorted in the same way for \code{git_pull()} and \code{git_push()}. If
 \code{gitcreds} package is installed, this is used first to check whether the
 system git installation already has a username / password for this host.
 This can be changed or added using stand-alone git, or \code{gitcreds::gitcreds_set()}.
 
-Alternatively, the simpler approach is to create a Personal Access Token and
-save it into your \code{.Renviron} file. The variable name must begin \code{GIT_PAT}
-and any additional words are used to distinguish the PAT for the relevant
-host, for example \code{GIT_PAT_AZURE=abc123def456} will be chosen to authenticate
-an Azure DevOps remote instead of \code{GIT_PAT_GITHUB} or \code{GIT_PAT_GITLAB}.
+Alternatively, if \code{gitcreds} is not installed, a system-git is not available,
+or no existing git credentials are found, then the the environmental variables
+are searched for a suitable Personal Access Token. The variable name must begin
+\code{GIT_PAT} and any additional words are used to distinguish the PAT for the relevant
+host using a closest-string match for the remote URL, for example
+\code{GIT_PAT_AZURE=abc123def456} will be chosen to authenticate
+an Azure DevOps remote above \code{GIT_PAT_GITHUB} or \code{GIT_PAT_GITLAB}.
+
+To set this up from scratch by creating a Personal Access Token and saving it
+to your \code{.Renviron} file with the name "GIT_PAT****" where asterisks can be
+replaced with part of the remote URL if you need to distinguish between several
+different PATs (and a good reminder of what it is).
 }
 \seealso{
 git_pull, git_remote

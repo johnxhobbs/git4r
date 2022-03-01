@@ -1,8 +1,9 @@
 # git4r 0.1.0
 
-* Git For R tools checked and used
+* Git For R tools checked and used by small user-group
 
 # git4r 0.1.1
 
-* Tools streamlined to get minimal useful set
-* Feedback from initial test users
+* First public release
+* Tools streamlined (non-git-related tools culled)
+* gitcreds package adopted as optional way of handling credentials

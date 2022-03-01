@@ -2,7 +2,8 @@
 
 #' Auto Git
 #'
-#' Call the git pull-add-commit-push cycle interactively
+#' Call the git pull-add-commit-push cycle interactively. This is the default
+#' helper function to call continuously to log changes and stay up-to-date.
 #'
 #' @seealso git_remote, git_add, git_commit, git_push, git_branch, git_diff
 #' @returns Invisible NULL
@@ -21,24 +22,24 @@ git = function(){
 #'
 #' Prints all changed files since last commit and waits for you to hit
 #' ENTER to add everything, or type out the space-separated numbers of
-#' what you do want to add to the next commit, else ESCAPE to cancel. It
-#' is highly recommended that you call without any arguments - `git_add()`
+#' what you do want to add to the next commit, else ESCAPE to cancel.
 #'
-#' Files can be specified by number by typing a list of space-separated
-#' values. The inverse can also be used, for example "-2 -4" would add
-#' (or remove)
+#' Files can are selected by number by typing a list of space-separated
+#' values. The inverse can also be used, for example "-2 -4" would add all
+#' *except* the 2nd and 4th file.
 #'
 #' Each file or directory is given a symbol for change type:
 #' - `-` has been deleted
 #' - `+` has been created
-#' - `*` has been changed since git_add() was last called and should be re-added
+#' - `*` has been changed since `git_add()` was last called and should be re-added
 #' - `@` has been renamed, but this will often show as a pair of `+` and `-`
 #' - `?` contains conflict from latest merge; go in and edit by hand, searching
 #'       for "<<<<<<< HEAD" up to ">>>>>>> (some branch)"
 #'
-#' Arguments can be given which are the character or integer answer to the
-#' interactive questions asked. It is highly recommended that you do not rely
-#' on passing arguments because it is operating blind.
+#' For any file which has been flagged by `git_pull()` or `git_merge()` as containing
+#' conflicts, these are *not* included by hitting ENTER and must be added by number.
+#' This is to reduce the risk of accidentally committing a whole load of conflicts.
+#' Each file should be inspected manually before adding.
 #'
 #' @returns Invisible NULL
 #' @export
@@ -135,9 +136,22 @@ git_add = function(){
 
 #' Git Commit
 #'
-#' Run git_add() immediately before to see what files are being committed. It is
-#' highly recommended that you run in interactive mode using no arguments
-#' (`git_commit()`)
+#' Make a commit checkpoint of the entire working directory except any changes which
+#' have not been added, or files listed in `.gitignore`. Run `git_add()` immediately
+#' before to confirm what changes are going to be included / excluded.
+#'
+#' Commit messages are personal preference and many examples of good practice can
+#' be found online. These messages should be useful for:
+#' - informing yourself and others of what development choices have been made so far
+#' - searching for a particular change, for example like `git_history(message='bugfix 123')`
+#' - explaining a particular change for somebody else to review and accept
+#'
+#' The current user identity (username and email) is printed to confirm who will
+#' be tagged as making the commit. If this has not yet been configured, these
+#' details are prompted interactively.
+#'
+#' Amending commits is not currently possible (see issue #213 for git2r) therefore
+#' a commit message cannot be left blank.
 #'
 #' @param message Commit message, usually one sentence about a specific change,
 #'                character atomic. This is asked for interactively if left NULL.
@@ -152,7 +166,7 @@ git_commit = function(message = NULL){
   # Optionally run git_add() to show you what you are commiting
   message = ask_generic('Commit message: ', answer=message)
   if(message==''){
-    stop('Must give a message! Cannot amend previous commit (see issue #213 for git2r)')
+    stop('Must give a message! Cannot amend previous commit ')
   }
 
   check_unresolved_conflicts()

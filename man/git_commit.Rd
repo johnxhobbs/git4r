@@ -14,7 +14,23 @@ character atomic. This is asked for interactively if left NULL.}
 Invisible NULL
 }
 \description{
-Run git_add() immediately before to see what files are being committed. It is
-highly recommended that you run in interactive mode using no arguments
-(\code{git_commit()})
+Make a commit checkpoint of the entire working directory except any changes which
+have not been added, or files listed in \code{.gitignore}. Run \code{git_add()} immediately
+before to confirm what changes are going to be included / excluded.
+}
+\details{
+Commit messages are personal preference and many examples of good practice can
+be found online. These messages should be useful for:
+\itemize{
+\item informing yourself and others of what development choices have been made so far
+\item searching for a particular change, for example like \code{git_history(message='bugfix 123')}
+\item explaining a particular change for somebody else to review and accept
+}
+
+The current user identity (username and email) is printed to confirm who will
+be tagged as making the commit. If this has not yet been configured, these
+details are prompted interactively.
+
+Amending commits is not currently possible (see issue #213 for git2r) therefore
+a commit message cannot be left blank.
 }

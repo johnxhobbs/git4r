@@ -16,5 +16,5 @@ Invisible NULL
 Reset working directory to any previous commit, or action. This will not change
 the active branch so do this \emph{first} if you want to continue on a different
 branch. All previous commits are shown, even if the branch they were on has
-been deleted, and this undo 'reset' itself will appear as a 'reflog' action
+been deleted, and this undo 'reset' itself will appear as a 'reflog' action.
 }

@@ -8,7 +8,7 @@ git_diff(path = ".", ...)
 }
 \arguments{
 \item{path}{Path or directory to compare - must be relative to the
-root directory of the repository, regardless of whether getwd()
+root directory of the repository, regardless of whether \code{getwd()}
 is a subdirectory.}
 
 \item{...}{Two arguments to be passed for which versions to select: can be
@@ -21,9 +21,9 @@ A diffr htmlwidget object which is automatically opened in RStudio Viewer tab
 \description{
 Display the difference between two commits of a file or a directory structure.
 Paths must be relative to the top-level git directory so it is recommended that
-getwd() is the same so that tab auto-complete gives the right path. The default
+\code{getwd()} is the same so that tab auto-complete gives the right path. The default
 filter is \code{n=1} and \code{NULL} meaning compare working tree (or a file contents)
-of latest commit with current saved version.
+of latest commit with current working directory.
 }
 \details{
 Two commits can be specified using \code{git_get()} or \code{git_history()[[i]]}, or a

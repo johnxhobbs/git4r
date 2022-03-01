@@ -12,25 +12,25 @@ Invisible NULL
 \description{
 Prints all changed files since last commit and waits for you to hit
 ENTER to add everything, or type out the space-separated numbers of
-what you do want to add to the next commit, else ESCAPE to cancel. It
-is highly recommended that you call without any arguments - \code{git_add()}
+what you do want to add to the next commit, else ESCAPE to cancel.
 }
 \details{
-Files can be specified by number by typing a list of space-separated
-values. The inverse can also be used, for example "-2 -4" would add
-(or remove)
+Files can are selected by number by typing a list of space-separated
+values. The inverse can also be used, for example "-2 -4" would add all
+\emph{except} the 2nd and 4th file.
 
 Each file or directory is given a symbol for change type:
 \itemize{
 \item \code{-} has been deleted
 \item \code{+} has been created
-\item \code{*} has been changed since git_add() was last called and should be re-added
+\item \code{*} has been changed since \code{git_add()} was last called and should be re-added
 \item \code{@} has been renamed, but this will often show as a pair of \code{+} and \code{-}
 \item \verb{?} contains conflict from latest merge; go in and edit by hand, searching
 for "<<<<<<< HEAD" up to ">>>>>>> (some branch)"
 }
 
-Arguments can be given which are the character or integer answer to the
-interactive questions asked. It is highly recommended that you do not rely
-on passing arguments because it is operating blind.
+For any file which has been flagged by \code{git_pull()} or \code{git_merge()} as containing
+conflicts, these are \emph{not} included by hitting ENTER and must be added by number.
+This is to reduce the risk of accidentally committing a whole load of conflicts.
+Each file should be inspected manually before adding.
 }

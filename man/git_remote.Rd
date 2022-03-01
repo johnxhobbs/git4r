@@ -21,7 +21,7 @@ Invisible NULL
 View and interactively edit remotes for this repo. The most important of these
 is 'origin' which will be used by \code{git_pull()}, however you may also want a
 write-only mirror, for example where you push a production-ready commit. If
-GIT_DEFAULT_REMOTE environmental value has been set, this will be suggested
+\code{GIT_DEFAULT_REMOTE} environmental value has been set, this will be suggested
 for 'origin'.
 }
 \details{

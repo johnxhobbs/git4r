@@ -9,20 +9,30 @@
 #' remote branch. If the branch does not exist yet in the remote, it is not
 #' pushed by default and must be manually added.
 #'
-#' Credentials are sorted in the same way as git_pull() and git_push(). If
+#' Credentials are sorted in the same way for `git_pull()` and `git_push()`. If
 #' `gitcreds` package is installed, this is used first to check whether the
 #' system git installation already has a username / password for this host.
 #' This can be changed or added using stand-alone git, or `gitcreds::gitcreds_set()`.
 #'
-#' Alternatively, the simpler approach is to create a Personal Access Token and
-#' save it into your `.Renviron` file. The variable name must begin `GIT_PAT`
-#' and any additional words are used to distinguish the PAT for the relevant
-#' host, for example `GIT_PAT_AZURE=abc123def456` will be chosen to authenticate
-#' an Azure DevOps remote instead of `GIT_PAT_GITHUB` or `GIT_PAT_GITLAB`.
+#' Alternatively, if `gitcreds` is not installed, a system-git is not available,
+#' or no existing git credentials are found, then the the environmental variables
+#' are searched for a suitable Personal Access Token. The variable name must begin
+#' `GIT_PAT` and any additional words are used to distinguish the PAT for the relevant
+#' host using a closest-string match for the remote URL, for example
+#' `GIT_PAT_AZURE=abc123def456` will be chosen to authenticate
+#' an Azure DevOps remote above `GIT_PAT_GITHUB` or `GIT_PAT_GITLAB`.
+#'
+#' To set this up from scratch by creating a Personal Access Token and saving it
+#' to your `.Renviron` file with the name "GIT_PAT****" where asterisks can be
+#' replaced with part of the remote URL if you need to distinguish between several
+#' different PATs (and a good reminder of what it is).
 #'
 #' @seealso git_pull, git_remote
 #'
-#' @param do_default Confirm that the default push-all-tracking-branches-to-origin ("Y" or TRUE)
+#' @param do_default Character or logical passed as the answer to the interactive question
+#'          which is "push the current branch to origin". If 'Y' or TRUE, this function
+#'          runs without user input (used by `git()`), the default value `NULL` will
+#'          prompt the user to answer interactively.
 #' @returns Invisible NULL
 #' @export
 git_push = function(do_default = NULL){
@@ -108,16 +118,14 @@ git_push = function(do_default = NULL){
 
 #' Git Pull
 #'
-#' This will pull any updates from the remote which each branch is tracking.
-#' This is set using git_remote() to be the 'origin' remote, usually at
-#' GIT_DEFAULT_REMOTE. This should be run before any new commits.
+#' This will pull any updates from the 'origin' remote for every branch.
+#' This should be run before making a commit (as is done by wrapper `git()`) in
+#' order to avoid conflicts arising if somebody else has made changes
+#' on the same branch. If this happens, merge conflicts are raised in the usual
+#' way and `git_add()` will show you what needs resolving.
 #'
-#' If git_push() has not been run yet, it will complain that branches are not
-#' set to track anything. If so, run git_remote() and git_push() to synchronise.
-#'
-#' Credentials are sorted in the same way as git_pull() and git_push()
-#' using the best-matching `GIT_PAT`* environmental variable to the remote's
-#' address, for example `GIT_PAT_AZURE=` in `~/.Renviron`
+#' To setup an 'origin' remote, use `git_remote()`. Credentials are handled
+#' in the same way as `git_push()`, see `?git_push` for details.
 #'
 #' @seealso git_push, git_remote
 #' @returns Invisible NULL
@@ -147,29 +155,34 @@ git_pull = function(){
 
 #' Git Clone from Default Remote
 #'
-#' Running without any repo_name will print a list of valid repos found at the
-#' GIT_DEFAULT_REMOTE path, and can then be re-run with one of these names to
-#' clone a local version. Otherwise a url or complete filepath can be used.
+#' Clone another repository given as a URL of absolute filepath. Alternatively,
+#' if `GIT_DEFAULT_REMOTE` environmental variable has been set
+#' a list of repositories within this path is displayed and can be cloned by name.
 #'
-#' To change where the default remote path is use
-#' - `Sys.setenv(GIT_DEFAULT_REMOTE='P:/ath/to/teams/remote_repo/folder')`
+#' Running `repo_name=""` will print a list of valid repositories found at the
+#' `GIT_DEFAULT_REMOTE` path, and can then be re-run with one of these names to
+#' clone a local version. This is to make basic on-premises collaboration and backups
+#' more effortless. `GIT_DEFAULT_REMOTE` can be set in .Renviron file as per `?git_remote`
+#'
+#' Other repositories can be cloned as expected by giving a URL. Credentials are handled
+#' automatically in the same way as `?git_push`.
 #'
 #' @param repo_name Name of repo to clone, leave blank to display a list of available
 #'             repo names. Also accepted is the url or complete filepath to a
 #'             repo to clone (identified if containing '/').
-#' @param to Local path to create local project folder in, defaults to My Documents
+#' @param to Local path to create local project folder in, defaults to home directory
 #' @returns Invisible NULL
 #' @export
-git_clone = function(repo_name='', to='~'){
+git_clone = function(repo_name='', to='~/'){
 
   # Possibly move this into arguments to allow cloning from other places (eg cloud)
   path=Sys.getenv('GIT_DEFAULT_REMOTE')
 
-  # If no DEAFULT_REPO on a shared drive is found, or repo_name has a / (absolute path or url)
+  # If no DEAFULT_REPO on a shared drive is found, or repo_name has a "/" (absolute path or url)
   if(path=='' | grepl('/',repo_name)){
     from = repo_name
-    message('Is URL')
   } else {
+    # Proceed with the method which uses a name within GIT_DEFAULT_REMOTE
     # List available repo if not given by name
     try_dirs = list.dirs(path = path, recursive = FALSE)
     available_repos = lapply(try_dirs, git2r::discover_repository )
@@ -193,6 +206,9 @@ git_clone = function(repo_name='', to='~'){
 
     from = paste0(path,'/',repo_name)
   }
+
+  if(from=='') stop('No repo_name given, and no GIT_DEFAULT_REMOTE set to list available repos')
+
   to = paste0(to,'/',basename(repo_name))
   cat('Cloning ',repo_name,' into "',to,'"')
   ask_proceed(' -- proceed? (Y/N) ')
@@ -226,7 +242,7 @@ git_clone = function(repo_name='', to='~'){
 #' View and interactively edit remotes for this repo. The most important of these
 #' is 'origin' which will be used by `git_pull()`, however you may also want a
 #' write-only mirror, for example where you push a production-ready commit. If
-#' GIT_DEFAULT_REMOTE environmental value has been set, this will be suggested
+#' `GIT_DEFAULT_REMOTE` environmental value has been set, this will be suggested
 #' for 'origin'.
 #'
 #' If using a filesystem path for the remote, the option is given to create a full
@@ -314,10 +330,11 @@ git_remote = function(remote_name = NULL, remote_path = NULL){
 
   # Default behaviour is to use GIT_DEFAULT_REMOTE for 'origin' if it does exist
   if(default_remote!='' & add_name=='origin'){
-    add_url = ask_generic(paste0("Path / URL for '",add_name,"' (hit ENTER to use default ",default_remote,"): "), answer=remote_path)
+    repo_name = basename(dirname(git2r::discover_repository()))
+    default_url = paste0(Sys.getenv('GIT_DEFAULT_REMOTE'),'/',repo_name)
+    add_url = ask_generic(paste0("Path / URL for '",add_name,"' (hit ENTER to use default ",default_url,"): "), answer=remote_path)
     if(add_url==''){
-      repo_name = basename(dirname(git2r::discover_repository()))
-      add_url = paste0(Sys.getenv('GIT_DEFAULT_REMOTE'),'/',repo_name)
+      add_url = default_url
     }
   } else {
     add_url = ask_generic(paste0("Path / URL for '",add_name,"': "), answer=remote_path)
@@ -332,7 +349,7 @@ git_remote = function(remote_name = NULL, remote_path = NULL){
 
   # If local path, will need to make the dir and init
   if(!grepl('^http',add_url)){
-    use_bare = ask_proceed("Make remote a bare repository (recommended for 'origin' - see ?git_remote) (Y/N): ")
+    use_bare = ask_proceed("Use bare repository for remote (see ?git_remote: recommended for 'origin') (Y/N): ")
     check_and_create_valid_repo(target_path=add_url, bare=use_bare)
   }
 

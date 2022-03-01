@@ -15,10 +15,13 @@ Invisible NULL
 }
 \description{
 Swaps to a different branch if exists, otherwise makes one from most recent
-commit, and checks out this branch. Hit ENTER on first question to see a list
-of available branches.
+commit, and checks out this branch. If no branch name is specified, all
+branches will be printed.
 }
 \details{
+Changing to a branch which is only listed under remote (for example origin/test)
+by \code{git_branch('test')} will automatically create a local copy of this branch.
+
 If there are uncommitted changes, it will forbid changing to an existing
 branch which would result in irreversible loss of current working directory.
 If the branch does not exist yet, the working directory is not changed and
@@ -26,10 +29,16 @@ the next commit will be on this new branch.
 
 You are allowed to change branch to any which share the same latest commit
 so you can create a branch and instantly remove it, whilst keeping any
-pending changes.
+uncommitted changes. The user is notified that the branch has been changed
+invisibly (namely with no change to the working directory). This may result
+in a warning that not all changes have been committed when returning much later
+to the first branch if some changes are staged,
 
-Changing to a branch which is only listed under remote (for example origin/test)
-by \code{git_branch('test')} will automatically create a local copy of this branch.
+Currently, this is the only situation you are allowed to delete a branch,
+because in other situations it would result in irreversibly loss of commits
+(although \code{git_undo()} will still work for a short time to find orphaned commits).
+For now, housekeeping and deleting branches should be done manually with system
+git or \code{git2r::branch_delete()} if you are really sure.
 }
 \seealso{
 git_merge

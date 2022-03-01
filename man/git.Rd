@@ -10,7 +10,8 @@ git()
 Invisible NULL
 }
 \description{
-Call the git pull-add-commit-push cycle interactively
+Call the git pull-add-commit-push cycle interactively. This is the default
+helper function to call continuously to log changes and stay up-to-date.
 }
 \seealso{
 git_remote, git_add, git_commit, git_push, git_branch, git_diff

@@ -55,7 +55,7 @@ git_checkout = function(commit, onto_new_branch){
 #' Reset working directory to any previous commit, or action. This will not change
 #' the active branch so do this *first* if you want to continue on a different
 #' branch. All previous commits are shown, even if the branch they were on has
-#' been deleted, and this undo 'reset' itself will appear as a 'reflog' action
+#' been deleted, and this undo 'reset' itself will appear as a 'reflog' action.
 #'
 #' @param top Number of undo commits to show
 #' @returns Invisible NULL
@@ -90,9 +90,12 @@ git_undo = function(top = 10){
 
 #' Git Display History and Select Commit
 #'
-#' Display the history of commits in specific branch with the option to filter.
+#' Display the history of commits in a specific branch with the option to filter.
 #' The list of commits is returned invisibly and can be extracted using `[[i]]`
-#' alternatively use git_get() to return the newest meeting a certain filter.
+#' alternatively use `git_get()` to return the newest commit after filtering.
+#'
+#' By default the history of the current branch is returned. The commits of a remote
+#' branch can be found using `branch='origin/master`, for example.
 #'
 #' The following filter arguments can be given:
 #' - `n` - integer vector of commits back from latest (1 = most recent commit)
@@ -101,7 +104,9 @@ git_undo = function(top = 10){
 #' - `message` - regular expression string to find in commit message
 #' - `author` and `email` - regular expression string of author or email of the commit
 #'
-#' If nothing could be matched, get_git() will start looking on other branches.
+#' If nothing could be matched, `get_git()` will start looking on other branches,
+#' for example when looking for a particular hash. The user is notified if this
+#' happens.
 #'
 #' @returns
 #' Return the git_commit object which best matches a wide variety of types. This
@@ -214,9 +219,9 @@ git_filter_commits = function(list_of_commits, n=NULL, before=NULL,
 #'
 #' Display the difference between two commits of a file or a directory structure.
 #' Paths must be relative to the top-level git directory so it is recommended that
-#' getwd() is the same so that tab auto-complete gives the right path. The default
+#' `getwd()` is the same so that tab auto-complete gives the right path. The default
 #' filter is `n=1` and `NULL` meaning compare working tree (or a file contents)
-#' of latest commit with current saved version.
+#' of latest commit with current working directory.
 #'
 #' Two commits can be specified using `git_get()` or `git_history()[[i]]`, or a
 #' single named filter argument for each commit for simple requests. Use `NULL`
@@ -262,7 +267,7 @@ git_filter_commits = function(list_of_commits, n=NULL, before=NULL,
 #' }
 #'
 #' @param path Path or directory to compare - must be relative to the
-#'             root directory of the repository, regardless of whether getwd()
+#'             root directory of the repository, regardless of whether `getwd()`
 #'             is a subdirectory.
 #' @param ...  Two arguments to be passed for which versions to select: can be
 #'             a commit object from git_history() or get_git(), or a single filter
